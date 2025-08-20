@@ -25,12 +25,10 @@ class AppTheme {
       primary: ColorManager.primaryLight,
       secondary: ColorManager.greenLight,
       error: ColorManager.errorLight,
-      background: ColorManager.whiteLight,
       surface: ColorManager.lightGrayLight,
       onPrimary: ColorManager.whiteLight,
       onSecondary: ColorManager.whiteLight,
       onError: ColorManager.whiteLight,
-      onBackground: ColorManager.darkGrayLight,
       onSurface: ColorManager.darkGrayLight,
     ),
   );

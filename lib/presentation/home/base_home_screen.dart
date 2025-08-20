@@ -9,6 +9,6 @@ class BaseHomeScreen extends StatefulWidget {
 class _BaseHomeScreenState extends State<BaseHomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Scaffold(body: Center(child: Text("data"),),);
   }
 }
