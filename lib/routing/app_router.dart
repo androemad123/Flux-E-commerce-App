@@ -1,4 +1,5 @@
 import 'package:depi_graduation/presentation/home/base_home_screen.dart';
+import 'package:depi_graduation/presentation/onboarding/welcome_screen.dart';
 import 'package:depi_graduation/presentation/sign%20up/sign_up_screen.dart';
 import 'package:depi_graduation/routing/routes.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,6 +22,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => BaseHomeScreen());
       case Routes.productDetailsRoute:
         return MaterialPageRoute(builder: (_) => ProductDetailsScreen());
+      case Routes.welcomeScreen:
+        return MaterialPageRoute(builder: (_) => WelcomeScreen());
 
       default:
         return unDefinedRoute();
