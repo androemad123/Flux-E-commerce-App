@@ -1,6 +1,7 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppMargin {
+  static double m4 = 4.w;
   static double m8 = 8.w;
   static double m10 = 10.w;
   static double m12 = 12.w;
@@ -29,4 +30,5 @@ class AppSize {
   static double s14 = 14.r;
   static double s16 = 16.r;
   static double s18 = 18.r;
+  static double s20 = 20.r;
 }

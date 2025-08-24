@@ -51,7 +51,7 @@ class _FluxAppState extends State<FluxApp> {
           ],
           supportedLocales: S.delegate.supportedLocales,
           debugShowCheckedModeBanner: false,
-          initialRoute: Routes.welcomeScreen,
+          initialRoute: Routes.homeRoute,
           onGenerateRoute: widget.appRouter.generateRoute,
         );
       },
