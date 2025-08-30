@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'color_manager.dart';
 
 class AppTheme {
@@ -26,6 +27,7 @@ class AppTheme {
       secondary: ColorManager.greenLight,
       error: ColorManager.errorLight,
       surface: ColorManager.lightGrayLight,
+      shadow: ColorManager.lighterGrayLight,
       onPrimary: ColorManager.whiteLight,
       onSecondary: ColorManager.whiteLight,
       onError: ColorManager.whiteLight,
@@ -57,6 +59,7 @@ class AppTheme {
       secondary: ColorManager.greenDark,
       error: ColorManager.errorDark,
       surface: ColorManager.lightGrayDark,
+      shadow: ColorManager.lighterGrayDark,
       onPrimary: ColorManager.whiteDark,
       onSecondary: ColorManager.whiteDark,
       onError: ColorManager.whiteDark,
