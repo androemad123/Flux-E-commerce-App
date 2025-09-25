@@ -238,6 +238,7 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(
         backgroundColor: ColorManager.whiteLight,
         title: Center(child: Text("GemStore" , style: boldStyle(fontSize: FontSize.s16, color: ColorManager.primaryLight)),),
