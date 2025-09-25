@@ -53,7 +53,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       onPageChanged: _onPageChanged,
                       controller: _pageController,
                       physics: const BouncingScrollPhysics(),
-
                       children: [
                         const FirstScreen(),
                         const SecondScreen(),
@@ -76,10 +75,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       width: _currentPage == index ? 16 : 8,
                       height: 8,
                       decoration: BoxDecoration(
-                        color:
-                            _currentPage == index
-                                ? Colors.white
-                                : Colors.white.withOpacity(0.5),
+                        color: _currentPage == index
+                            ? Colors.white
+                            : Colors.white.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(4.r),
                       ),
                     );
@@ -88,8 +86,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
               Positioned(
                 bottom: MediaQuery.of(context).size.height * 0.1,
-                left:
-                    (MediaQuery.of(context).size.width / 2) -
+                left: (MediaQuery.of(context).size.width / 2) -
                     65, // Center the button
                 child: OutlinedButton(
                   onPressed: _goToNextPage,
@@ -101,13 +98,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       vertical: 10,
                     ),
                   ),
-                  child: Text(
-                    'Shopping Now',
-                    style: TextStyle(color: Colors.white),
+                  child: GestureDetector(
+                    onTap: () {
+                      // Navigate to the next screen or perform an action
+                      Navigator.pushNamed(context,
+                          "/loginRoute"); // Replace with your route
+                    },
+                    child: Text(
+                      'Shopping Now',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ),
-              
             ],
           ),
         ],
