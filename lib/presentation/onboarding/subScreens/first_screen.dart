@@ -1,3 +1,4 @@
+import 'package:depi_graduation/presentation/resources/color_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -14,7 +15,7 @@ class _FirstScreenState extends State<FirstScreen> {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           _upperContainer(),
@@ -44,7 +45,7 @@ class _FirstScreenState extends State<FirstScreen> {
 
 Widget _upperContainer() {
   return Container(
-    color: Colors.white,
+    color: ColorManager.whiteLight,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [

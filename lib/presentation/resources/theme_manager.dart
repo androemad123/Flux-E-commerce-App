@@ -13,7 +13,7 @@ class AppTheme {
       elevation: 0,
     ),
     textTheme: TextTheme(
-      bodyLarge: TextStyle(color: ColorManager.darkGrayLight),
+      bodyLarge: TextStyle(color: Colors.white),
       bodyMedium: TextStyle(color: ColorManager.lightGrayLight),
       bodySmall: TextStyle(color: ColorManager.lighterGrayLight),
     ),
