@@ -3,13 +3,14 @@ import '../../presentation/resources/color_manager.dart';
 import '../../presentation/resources/styles_manager.dart';
 import '../resources/value_manager.dart';
 
-class AppTextField extends StatelessWidget {
+class AppTextField extends StatefulWidget {
   final TextEditingController? controller;
   final String hintText;
   final IconData? icon;
   final bool isPassword;
   final TextInputType? keyboardType;
-  final String? Function(String?)? validator;
+  final String? Function(String? value)? validator;
+  final Widget? suffix;
 
   const AppTextField({
     Key? key,
@@ -19,28 +20,51 @@ class AppTextField extends StatelessWidget {
     this.isPassword = false,
     this.keyboardType,
     this.validator,
+    this.suffix,
   }) : super(key: key);
+
+  @override
+  State<AppTextField> createState() => _AppTextFieldState();
+}
+
+class _AppTextFieldState extends State<AppTextField> {
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
-      controller: controller,
-      obscureText: isPassword,
-      keyboardType: keyboardType,
-      validator: validator,
+      controller: widget.controller,
+      obscureText: widget.isPassword ? _obscureText : false,
+      keyboardType: widget.keyboardType,
+      validator: widget.validator,
       style: theme.textTheme.bodyLarge,
+      // style: TextStyle(color: Colors.black),
       decoration: InputDecoration(
-        hintText: hintText,
+        hintText: widget.hintText,
         hintStyle: regularStyle(
           fontSize: AppSize.s16, // ✅ from ValuesManager
           color: theme.primaryColor,
         ),
-        prefixIcon: icon != null
-            ? Icon(icon, color: theme.iconTheme.color)
+        prefixIcon: widget.icon != null
+            ? Icon(widget.icon, color: theme.iconTheme.color)
             : null,
+        suffixIcon: widget.isPassword
+            ? IconButton(
+                onPressed: () {
+                  setState(() {
+                    _obscureText = !_obscureText;
+                  });
+                },
+                icon: Icon(
+                  _obscureText ? Icons.visibility_off : Icons.visibility,
+                  color: theme.iconTheme.color,
+                ),
+              )
+            : widget.suffix,
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(
             color: ColorManager.lightGrayDark,

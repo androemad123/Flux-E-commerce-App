@@ -73,6 +73,11 @@ class S {
       args: [],
     );
   }
+
+  /// `value`
+  String get key {
+    return Intl.message('value', name: 'key', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

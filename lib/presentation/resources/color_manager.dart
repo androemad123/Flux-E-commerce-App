@@ -17,5 +17,5 @@ class ColorManager {
   static Color lighterGrayDark = const Color(0xff6C6C6C);
   static Color whiteDark = const Color(0xff1A1A1A);
   static Color greenDark = const Color(0xff00D084);
-  static Color errorDark = const Color(0xffFF8A4C);
+  static Color errorDark = const Color(0xffFF8A4D);
 }
