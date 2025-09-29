@@ -18,7 +18,8 @@ class FluxApp extends StatefulWidget {
 
   final AppRouter appRouter;
 
-  factory FluxApp({required AppRouter appRouter}) {
+  factory
+  FluxApp({required AppRouter appRouter}) {
     // create only one instance
     //singleton DP
     _instance ??= FluxApp._internal(appRouter: appRouter);
@@ -54,7 +55,7 @@ class _FluxAppState extends State<FluxApp> {
           supportedLocales: S.delegate.supportedLocales,
           debugShowCheckedModeBanner: false,
 
-          initialRoute: Routes.productDetailsRoute,
+          initialRoute: Routes.onboardingRoute,
 
           onGenerateRoute: widget.appRouter.generateRoute,
         );

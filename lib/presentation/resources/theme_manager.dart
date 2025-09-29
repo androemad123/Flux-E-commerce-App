@@ -8,13 +8,15 @@ class AppTheme {
     primaryColor: ColorManager.primaryLight,
     scaffoldBackgroundColor: ColorManager.whiteLight,
     cardColor: ColorManager.lightGrayLight,
+    shadowColor: ColorManager.darkGrayDark,
     appBarTheme: AppBarTheme(
-      backgroundColor: ColorManager.primaryLight,
-      foregroundColor: ColorManager.whiteLight,
+      centerTitle: true,
+      backgroundColor: ColorManager.whiteLight,
+      foregroundColor: ColorManager.primaryLight,
       elevation: 0,
     ),
     textTheme: TextTheme(
-      bodyLarge: TextStyle(color: ColorManager.darkGrayLight),
+      bodyLarge: TextStyle(color: Colors.black),
       bodyMedium: TextStyle(color: ColorManager.lightGrayLight),
       bodySmall: TextStyle(color: ColorManager.lighterGrayLight),
     ),
