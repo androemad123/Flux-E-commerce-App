@@ -28,4 +28,8 @@ class Product {
 class ProductState {
   final List<Product> product;
   ProductState({required this.product});
+
+  ProductState copyWith({List<Product>? product}) {
+    return ProductState(product: product ?? this.product);
+  }
 }

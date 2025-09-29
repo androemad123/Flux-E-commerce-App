@@ -10,7 +10,7 @@ class ProductBLoC extends Bloc<ProductEvent, ProductState> {
       },
     );
 
-    on<AddProduct>((event, emit){
+    on<AddProduct>((event, emit) {
       int productID = (DateTime.now().millisecondsSinceEpoch) % 0xFFFFFFFF;
 
       final newProduct = List<Product>.from(state.product)
@@ -41,18 +41,18 @@ class ProductBLoC extends Bloc<ProductEvent, ProductState> {
     );
 
     on<BuyedProduct>(
-      (event, emit) {
+      (event, emit) async {
         final AllProducts = List<Product>.from(state.product);
-        final index =AllProducts.indexWhere((p) => p.ProductID == event.ProductID);
+        final index =
+            AllProducts.indexWhere((p) => p.ProductID == event.ProductID);
         Product UpdatedProduct = AllProducts.elementAt(index);
         int x = UpdatedProduct.ProductQuantity;
         UpdatedProduct.ProductQuantity = x - UpdatedProduct.ProductUserQuantity;
-        if (UpdatedProduct.ProductQuantity <= 0) {
-          UpdatedProduct.isProductBuyed = !UpdatedProduct.isProductBuyed;
-        }
+        if (UpdatedProduct.ProductQuantity <= 0)
+          UpdatedProduct.isProductBuyed = true;
 
         AllProducts[index] = UpdatedProduct;
-        emit(ProductState(product: AllProducts));
+        emit(state.copyWith(product: AllProducts));
       },
     );
 
@@ -63,15 +63,11 @@ class ProductBLoC extends Bloc<ProductEvent, ProductState> {
             AllProducts.indexWhere((p) => p.ProductID == event.ProductID);
         Product UpdatedProduct = AllProducts.elementAt(index);
 
-        if(UpdatedProduct.ProductUserQuantity<UpdatedProduct.ProductQuantity){
-           UpdatedProduct.ProductUserQuantity++;
-
-        }
-
-       
+        if (UpdatedProduct.ProductUserQuantity < UpdatedProduct.ProductQuantity)
+          UpdatedProduct.ProductUserQuantity++;
 
         AllProducts[index] = UpdatedProduct;
-        emit(ProductState(product: AllProducts));
+        emit(state.copyWith(product: AllProducts));
       },
     );
 
@@ -80,15 +76,16 @@ class ProductBLoC extends Bloc<ProductEvent, ProductState> {
         final AllProducts = List<Product>.from(state.product);
         final index =
             AllProducts.indexWhere((p) => p.ProductID == event.ProductID);
-        Product UpdatedProduct = AllProducts.elementAt(index);
-        if (UpdatedProduct != null) {
+        if (index != -1) {
+          Product UpdatedProduct = AllProducts.elementAt(index);
+
           UpdatedProduct.isProductFavourate =
               !UpdatedProduct.isProductFavourate;
+
+          AllProducts[index] = UpdatedProduct;
         }
 
-        AllProducts[index] = UpdatedProduct;
-
-        emit(ProductState(product: AllProducts));
+        emit(state.copyWith(product: AllProducts));
       },
     );
 
@@ -97,35 +94,61 @@ class ProductBLoC extends Bloc<ProductEvent, ProductState> {
         final AllProducts = List<Product>.from(state.product);
         final index =
             AllProducts.indexWhere((p) => p.ProductID == event.ProductID);
-        Product UpdatedProduct = AllProducts.elementAt(index);
-        if (UpdatedProduct != null) {
+        if (index != -1) {
+          Product UpdatedProduct = AllProducts.elementAt(index);
+
           UpdatedProduct.isProductInCart = !UpdatedProduct.isProductInCart;
+
+          AllProducts[index] = UpdatedProduct;
         }
 
-        AllProducts[index] = UpdatedProduct;
-
-        emit(ProductState(product: AllProducts));
+        emit(state.copyWith(product: AllProducts));
       },
     );
 
     on<EditProduct>(
       (event, emit) async {
+        int TotalProducts;
+        bool? BuyedProduct;
+        int? TotoalUserProducts;
+
         final AllProducts = List<Product>.from(state.product);
         final index =
             AllProducts.indexWhere((p) => p.ProductID == event.ProductID);
-        Product UpdatedProduct = AllProducts.elementAt(index);
-        if (UpdatedProduct != null) {
-          UpdatedProduct.ProductName = event.ProductName;
-          UpdatedProduct.ProductDescription = event.ProductDescription;
-          UpdatedProduct.ProductCategotry = event.ProductCategotry;
-          UpdatedProduct.ProductPrice = event.ProductPrice;
-          UpdatedProduct.ProductImageURL = event.ProductImageURL;
-          UpdatedProduct.ProductPrice = event.ProductPrice;
+        if (index != -1) {
+          Product UpdatedProduct = AllProducts.elementAt(index);
+          if (UpdatedProduct.ProductQuantity < event.ProductQuantity) {
+            TotalProducts = event.ProductQuantity;
+            if (UpdatedProduct.isProductBuyed) BuyedProduct = false;
+          } else if (UpdatedProduct.ProductQuantity > event.ProductQuantity) {
+            if (event.ProductQuantity < UpdatedProduct.ProductUserQuantity) {
+              TotoalUserProducts = event.ProductQuantity;
+            }
+            TotalProducts = event.ProductQuantity;
+          } else
+            TotalProducts = event.ProductQuantity;
+
+          UpdatedProduct = Product(
+              ProductID: AllProducts[index].ProductID,
+              ProductName: event.ProductName,
+              ProductDescription: event.ProductDescription,
+              ProductCategotry: event.ProductCategotry,
+              ProductPrice: event.ProductPrice,
+              ProductImageURL: event.ProductImageURL,
+              ProductQuantity: TotalProducts,
+              ProductUserQuantity: (TotoalUserProducts == null)
+                  ? AllProducts[index].ProductUserQuantity
+                  : TotoalUserProducts,
+              isProductFavourate: AllProducts[index].isProductFavourate,
+              isProductInCart: AllProducts[index].isProductInCart,
+              isProductBuyed: (BuyedProduct == null)
+                  ? AllProducts[index].isProductBuyed
+                  : BuyedProduct);
+
+          AllProducts[index] = UpdatedProduct;
         }
 
-        AllProducts[index] = UpdatedProduct;
-
-        emit(ProductState(product: AllProducts));
+        emit(state.copyWith(product: AllProducts));
       },
     );
   }
