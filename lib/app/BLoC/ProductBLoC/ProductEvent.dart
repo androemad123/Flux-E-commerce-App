@@ -1,6 +1,11 @@
 abstract class ProductEvent {}
 
-class LoadProduct extends ProductEvent {}
+class LoadAllProducts extends ProductEvent {}
+
+class LoadProduct extends ProductEvent {
+  final int ProductID;
+  LoadProduct({required this.ProductID});
+}
 
 class AddProduct extends ProductEvent {
   String ProductName;
@@ -23,41 +28,26 @@ class DeleteProduct extends ProductEvent {
   DeleteProduct({required this.ProductID});
 }
 
-class BuyedProduct extends ProductEvent {
+class AdminEditProduct extends ProductEvent {
   final int ProductID;
-  BuyedProduct({required this.ProductID});
-}
+  final String? ProductName;
+  final String? ProductDescription;
+  final String? ProductCategotry;
+  final double? ProductPrice;
+  final String? ProductImageURL;
+  final int? ProductQuantity;
 
-class UserProducts extends ProductEvent{
-  final int ProductID;
-  UserProducts({required this.ProductID});
-}
-
-class EditProduct extends ProductEvent {
-  final int ProductID;
-  final String ProductName;
-  final String ProductDescription;
-  final String ProductCategotry;
-  final double ProductPrice;
-  final String ProductImageURL;
-  final int ProductQuantity;
-
-  EditProduct(
+  AdminEditProduct(
       {required this.ProductID,
-      required this.ProductName,
-      required this.ProductDescription,
-      required this.ProductCategotry,
-      required this.ProductPrice,
-      required this.ProductImageURL,
-      required this.ProductQuantity});
+      this.ProductName,
+      this.ProductDescription,
+      this.ProductCategotry,
+      this.ProductPrice,
+      this.ProductImageURL,
+      this.ProductQuantity});
 }
 
-class FavProduct extends ProductEvent {
-  final int ProductID;
-  FavProduct({required this.ProductID});
-}
-
-class CartProduct extends ProductEvent {
-  final int ProductID;
-  CartProduct({required this.ProductID});
+class LoadCategoryProduct extends ProductEvent {
+  String ProductCategotry;
+  LoadCategoryProduct({required this.ProductCategotry});
 }
