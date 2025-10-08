@@ -9,7 +9,7 @@ class AppTextField extends StatefulWidget {
   final IconData? icon;
   final bool isPassword;
   final TextInputType? keyboardType;
-  final String? Function(String?)? validator;
+  final String? Function(String? value)? validator;
   final Widget? suffix;
 
   const AppTextField({
@@ -42,6 +42,7 @@ class _AppTextFieldState extends State<AppTextField> {
       keyboardType: widget.keyboardType,
       validator: widget.validator,
       style: theme.textTheme.bodyLarge,
+      // style: TextStyle(color: Colors.black),
       decoration: InputDecoration(
         hintText: widget.hintText,
         hintStyle: regularStyle(

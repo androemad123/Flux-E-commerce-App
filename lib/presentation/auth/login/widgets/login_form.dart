@@ -36,7 +36,7 @@ class _LoginFormState extends State<LoginForm> {
       child: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state.isLoginSuccess == true) {
-            Navigator.pushNamed(context, Routes.homeRoute);
+            Navigator.pushNamedAndRemoveUntil(context, Routes.appInit, (route) => false,);
           } else if (state.isLoginError == true) {
             final message =
                 state.loginErrorMessage ?? 'Login failed. Please try again.';

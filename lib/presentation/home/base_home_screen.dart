@@ -25,13 +25,7 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
     Icons.brush_rounded,
   ];
 
-  final List<String> categoryNames = [
-    "Women",
-    "Men",
-    "Accessories",
-    "Beauty"
-  ];
-
+  final List<String> categoryNames = ["Women", "Men", "Accessories", "Beauty"];
 
   // dummy data
   final Map<String, Map<String, dynamic>> categoryData = {
@@ -40,41 +34,48 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
         "https://images.pexels.com/photos/974911/pexels-photo-974911.jpeg",
         "https://images.pexels.com/photos/994523/pexels-photo-994523.jpeg",
         "https://images.pexels.com/photos/1375736/pexels-photo-1375736.jpeg",
-            "https://images.pexels.com/photos/994523/pexels-photo-994523.jpeg"
+        "https://images.pexels.com/photos/994523/pexels-photo-994523.jpeg"
       ],
       "products": [
         {
           "name": "Turtleneck Sweater",
           "price": 39.99,
-          "image": "https://images.pexels.com/photos/428338/pexels-photo-428338.jpeg"
+          "image":
+              "https://images.pexels.com/photos/428338/pexels-photo-428338.jpeg"
         },
         {
           "name": "Long Sleeve Dress",
           "price": 45.00,
-          "image": "https://images.pexels.com/photos/2065200/pexels-photo-2065200.jpeg"
+          "image":
+              "https://images.pexels.com/photos/2065200/pexels-photo-2065200.jpeg"
         },
         {
           "name": "Blouse",
           "price": 29.99,
-          "image": "https://images.pexels.com/photos/994523/pexels-photo-994523.jpeg"
+          "image":
+              "https://images.pexels.com/photos/994523/pexels-photo-994523.jpeg"
         },
       ],
-      "header_image": "https://images.pexels.com/photos/1375736/pexels-photo-1375736.jpeg",
+      "header_image":
+          "https://images.pexels.com/photos/1375736/pexels-photo-1375736.jpeg",
       "recommended": [
         {
           "name": "Women's Jacket",
           "price": 79.99,
-          "image": "https://images.pexels.com/photos/1183266/pexels-photo-1183266.jpeg"
+          "image":
+              "https://images.pexels.com/photos/1183266/pexels-photo-1183266.jpeg"
         },
         {
           "name": "Summer Dress",
           "price": 55.00,
-          "image": "https://images.pexels.com/photos/985635/pexels-photo-985635.jpeg"
+          "image":
+              "https://images.pexels.com/photos/985635/pexels-photo-985635.jpeg"
         },
         {
           "name": "Casual Shirt",
           "price": 35.99,
-          "image": "https://images.pexels.com/photos/2065195/pexels-photo-2065195.jpeg"
+          "image":
+              "https://images.pexels.com/photos/2065195/pexels-photo-2065195.jpeg"
         },
       ],
       "collection_images": [
@@ -94,35 +95,42 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
         {
           "name": "Men's Shirt",
           "price": 49.99,
-          "image": "https://images.pexels.com/photos/769733/pexels-photo-769733.jpeg"
+          "image":
+              "https://images.pexels.com/photos/769733/pexels-photo-769733.jpeg"
         },
         {
           "name": "Men's Jacket",
           "price": 89.99,
-          "image": "https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg"
+          "image":
+              "https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg"
         },
         {
           "name": "Men's Pants",
           "price": 59.99,
-          "image": "https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg"
+          "image":
+              "https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg"
         },
       ],
-      "header_image": "https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg",
+      "header_image":
+          "https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg",
       "recommended": [
         {
           "name": "Men's Sweater",
           "price": 65.99,
-          "image": "https://images.pexels.com/photos/845434/pexels-photo-845434.jpeg"
+          "image":
+              "https://images.pexels.com/photos/845434/pexels-photo-845434.jpeg"
         },
         {
           "name": "Formal Suit",
           "price": 199.99,
-          "image": "https://images.pexels.com/photos/45055/pexels-photo-45055.jpeg"
+          "image":
+              "https://images.pexels.com/photos/45055/pexels-photo-45055.jpeg"
         },
         {
           "name": "Casual T-Shirt",
           "price": 25.99,
-          "image": "https://images.pexels.com/photos/1484807/pexels-photo-1484807.jpeg"
+          "image":
+              "https://images.pexels.com/photos/1484807/pexels-photo-1484807.jpeg"
         },
       ],
       "collection_images": [
@@ -142,35 +150,42 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
         {
           "name": "Leather Watch",
           "price": 120.00,
-          "image": "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg"
+          "image":
+              "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg"
         },
         {
           "name": "Sunglasses",
           "price": 75.00,
-          "image": "https://images.pexels.com/photos/702251/pexels-photo-702251.jpeg"
+          "image":
+              "https://images.pexels.com/photos/702251/pexels-photo-702251.jpeg"
         },
         {
           "name": "Handbag",
           "price": 95.00,
-          "image": "https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg"
+          "image":
+              "https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg"
         },
       ],
-      "header_image": "https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg",
+      "header_image":
+          "https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg",
       "recommended": [
         {
           "name": "Backpack",
           "price": 85.00,
-          "image": "https://images.pexels.com/photos/2905238/pexels-photo-2905238.jpeg"
+          "image":
+              "https://images.pexels.com/photos/2905238/pexels-photo-2905238.jpeg"
         },
         {
           "name": "Necklace",
           "price": 45.00,
-          "image": "https://images.pexels.com/photos/965981/pexels-photo-965981.jpeg"
+          "image":
+              "https://images.pexels.com/photos/965981/pexels-photo-965981.jpeg"
         },
         {
           "name": "Bracelet",
           "price": 35.00,
-          "image": "https://images.pexels.com/photos/1099816/pexels-photo-1099816.jpeg"
+          "image":
+              "https://images.pexels.com/photos/1099816/pexels-photo-1099816.jpeg"
         },
       ],
       "collection_images": [
@@ -190,35 +205,42 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
         {
           "name": "Makeup Kit",
           "price": 65.00,
-          "image": "https://images.pexels.com/photos/2536965/pexels-photo-2536965.jpeg"
+          "image":
+              "https://images.pexels.com/photos/2536965/pexels-photo-2536965.jpeg"
         },
         {
           "name": "Perfume",
           "price": 85.00,
-          "image": "https://images.pexels.com/photos/1040424/pexels-photo-1040424.jpeg"
+          "image":
+              "https://images.pexels.com/photos/1040424/pexels-photo-1040424.jpeg"
         },
         {
           "name": "Skincare Set",
           "price": 110.00,
-          "image": "https://images.pexels.com/photos/3373739/pexels-photo-3373739.jpeg"
+          "image":
+              "https://images.pexels.com/photos/3373739/pexels-photo-3373739.jpeg"
         },
       ],
-      "header_image": "https://images.pexels.com/photos/3373739/pexels-photo-3373739.jpeg",
+      "header_image":
+          "https://images.pexels.com/photos/3373739/pexels-photo-3373739.jpeg",
       "recommended": [
         {
           "name": "Lipstick Set",
           "price": 45.00,
-          "image": "https://images.pexels.com/photos/2648705/pexels-photo-2648705.jpeg"
+          "image":
+              "https://images.pexels.com/photos/2648705/pexels-photo-2648705.jpeg"
         },
         {
           "name": "Face Cream",
           "price": 55.00,
-          "image": "https://images.pexels.com/photos/4041392/pexels-photo-4041392.jpeg"
+          "image":
+              "https://images.pexels.com/photos/4041392/pexels-photo-4041392.jpeg"
         },
         {
           "name": "Hair Care",
           "price": 35.00,
-          "image": "https://images.pexels.com/photos/4041391/pexels-photo-4041391.jpeg"
+          "image":
+              "https://images.pexels.com/photos/4041391/pexels-photo-4041391.jpeg"
         },
       ],
       "collection_images": [
@@ -230,7 +252,6 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
     }
   };
 
-
   Map<String, dynamic> get currentCategoryData {
     return categoryData[categoryNames[selectedIndex]] ?? {};
   }
@@ -238,13 +259,26 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
         backgroundColor: ColorManager.whiteLight,
-        title: Center(child: Text("GemStore" , style: boldStyle(fontSize: FontSize.s16, color: ColorManager.primaryLight)),),
-        leading: IconButton(onPressed: () {}, icon: Icon(Icons.menu , color: ColorManager.primaryLight,)),
+        title: Center(
+          child: Text("GemStore",
+              style: boldStyle(
+                  fontSize: FontSize.s16, color: ColorManager.primaryLight)),
+        ),
+        leading: IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.menu,
+              color: ColorManager.primaryLight,
+            )),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.notifications , color: ColorManager.primaryLight,))
+          IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.notifications,
+                color: ColorManager.primaryLight,
+              ))
         ],
       ),
       body: SingleChildScrollView(
@@ -252,32 +286,23 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
           padding: EdgeInsets.all(AppPadding.p12),
           child: Column(
             children: [
-
               _buildCategorySection(),
               SizedBox(height: 20.h),
-
               _buildSliderBanner(),
               SizedBox(height: 20.h),
-
               _buildFeaturedProductsSection(),
               SizedBox(height: 10.h),
-
               _buildPromoBanner(),
               SizedBox(height: 20.h),
-
               _buildRecommendedSection(),
               SizedBox(height: 20.h),
-
               _buildTopCollectionSection(),
             ],
           ),
         ),
       ),
-
-      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
-
 
   Widget _buildCategorySection() {
     return Row(
@@ -298,9 +323,9 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
                   shape: BoxShape.circle,
                   border: isSelected
                       ? Border.all(
-                    color: ColorManager.primaryLight,
-                    width: 2.w,
-                  )
+                          color: ColorManager.primaryLight,
+                          width: 2.w,
+                        )
                       : null,
                 ),
                 child: Container(
@@ -308,13 +333,16 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
                   height: 60.h,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: isSelected ? ColorManager.primaryLight : ColorManager.lighterGrayLight.withOpacity(0.5),
-
+                    color: isSelected
+                        ? ColorManager.primaryLight
+                        : ColorManager.lighterGrayLight.withOpacity(0.5),
                   ),
                   child: Center(
                     child: Icon(
                       categoryIcons[index],
-                      color: isSelected ? ColorManager.whiteLight : ColorManager.primaryLight,
+                      color: isSelected
+                          ? ColorManager.whiteLight
+                          : ColorManager.primaryLight,
                       size: AppSize.s20, //12.sp
                     ),
                   ),
@@ -325,13 +353,13 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
                 categoryNames[index],
                 style: isSelected
                     ? boldStyle(
-                  fontSize: FontSize.s12,
-                  color: ColorManager.primaryLight,
-                )
+                        fontSize: FontSize.s12,
+                        color: ColorManager.primaryLight,
+                      )
                     : regularStyle(
-                    fontSize: FontSize.s12,
-                    color: ColorManager.lighterGrayLight,
-                ),
+                        fontSize: FontSize.s12,
+                        color: ColorManager.lighterGrayLight,
+                      ),
               ),
             ],
           ),
@@ -340,9 +368,11 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
     );
   }
 
-
   Widget _buildSliderBanner() {
-    final sliderImages = (currentCategoryData["slider_images"] as List<dynamic>?)?.cast<String>() ?? [];
+    final sliderImages =
+        (currentCategoryData["slider_images"] as List<dynamic>?)
+                ?.cast<String>() ??
+            [];
 
     return Container(
       height: 312.h,
@@ -382,13 +412,12 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
                       width: isActive ? 16.w : 8.w,
                       height: isActive ? 16.h : 8.h,
                       decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: ColorManager.whiteLight,
-                          width: 1.w,
-                        )
-                      ),
+                          color: Colors.transparent,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: ColorManager.whiteLight,
+                            width: 1.w,
+                          )),
                       child: Center(
                         child: Container(
                           width: 8.w,
@@ -409,9 +438,10 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
     );
   }
 
-
   Widget _buildFeaturedProductsSection() {
-    final products = (currentCategoryData["products"] as List<dynamic>?)?.cast<Map<String, dynamic>>() ?? [];
+    final products = (currentCategoryData["products"] as List<dynamic>?)
+            ?.cast<Map<String, dynamic>>() ??
+        [];
 
     return Column(
       children: [
@@ -487,7 +517,6 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
     );
   }
 
-
   Widget _buildPromoBanner() {
     final headerImage = currentCategoryData["header_image"] as String? ?? "";
 
@@ -503,9 +532,10 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
     );
   }
 
-
   Widget _buildRecommendedSection() {
-    final recommended = (currentCategoryData["recommended"] as List<dynamic>?)?.cast<Map<String, dynamic>>() ?? [];
+    final recommended = (currentCategoryData["recommended"] as List<dynamic>?)
+            ?.cast<Map<String, dynamic>>() ??
+        [];
 
     return Column(
       children: [
@@ -545,9 +575,9 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12.r),
                   border: Border.all(
-                  color: ColorManager.lighterGrayLight.withOpacity(0.5),
-                  width: 0.5.w,
-                ),
+                    color: ColorManager.lighterGrayLight.withOpacity(0.5),
+                    width: 0.5.w,
+                  ),
                   color: ColorManager.whiteLight,
                 ),
                 child: Row(
@@ -601,7 +631,10 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
   }
 
   Widget _buildTopCollectionSection() {
-    final collectionImages = (currentCategoryData["collection_images"] as List<dynamic>?)?.cast<String>() ?? [];
+    final collectionImages =
+        (currentCategoryData["collection_images"] as List<dynamic>?)
+                ?.cast<String>() ??
+            [];
 
     return Column(
       children: [
@@ -697,47 +730,6 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
             ],
           ),
       ],
-    );
-  }
-
-  Widget _buildBottomNavigationBar() {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.r),
-      ),
-      child: BottomNavigationBar(
-        currentIndex: _currentBottomNavIndex,
-        onTap: (index) {
-          setState(() {
-            _currentBottomNavIndex = index;
-          });
-        },
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: ColorManager.whiteLight,
-        selectedItemColor: ColorManager.primaryLight,
-        unselectedItemColor: ColorManager.lighterGrayLight,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_bag),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "",
-          ),
-        ],
-      ),
     );
   }
 }
