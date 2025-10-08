@@ -1,4 +1,3 @@
-import 'package:depi_graduation/presentation/resources/color_manager.dart';
 import 'package:depi_graduation/presentation/widgets/app_text_button.dart';
 import 'package:depi_graduation/presentation/widgets/app_text_field.dart';
 import 'package:flutter/material.dart';
