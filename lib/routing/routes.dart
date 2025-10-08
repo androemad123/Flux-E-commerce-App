@@ -7,8 +7,11 @@ class Routes{
   static const String forgetPasswordRoute ="/forgetPasswordRoute";
   static const String homeRoute ="/homeRoute";
   static const String productDetailsRoute ="/productDetailsRoute";
+  static const String ordersScreen ="/ordersScreen";
+  static const String orderDetailsScreen ="/orderDetailsScreen";
 
-  
-  
+
+
+
 
 }

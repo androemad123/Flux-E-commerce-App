@@ -20,10 +20,42 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'en';
 
+  static String m0(status) => "No ${status} orders";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "cancelled": MessageLookupByLibrary.simpleMessage("Cancelled"),
+    "continueShopping": MessageLookupByLibrary.simpleMessage(
+      "Continue shopping",
+    ),
+    "delivered": MessageLookupByLibrary.simpleMessage("Delivered"),
+    "deliveryAddress": MessageLookupByLibrary.simpleMessage("Delivery address"),
+    "details": MessageLookupByLibrary.simpleMessage("Details"),
     "email": MessageLookupByLibrary.simpleMessage("write your email here "),
     "key": MessageLookupByLibrary.simpleMessage("value"),
+    "myOrdersTitle": MessageLookupByLibrary.simpleMessage("My Orders"),
+    "noOrders": m0,
+    "orderNumber": MessageLookupByLibrary.simpleMessage("Order number"),
+    "pending": MessageLookupByLibrary.simpleMessage("Pending"),
+    "quantity": MessageLookupByLibrary.simpleMessage("Quantity"),
+    "rate": MessageLookupByLibrary.simpleMessage("Rate"),
+    "rateProductTitle": MessageLookupByLibrary.simpleMessage("Rate Product"),
+    "ratingHint": MessageLookupByLibrary.simpleMessage("Tap stars to rate"),
+    "returnHome": MessageLookupByLibrary.simpleMessage("Return home"),
+    "reviewFieldHint": MessageLookupByLibrary.simpleMessage(
+      "Would you like to write anything about this product?",
+    ),
+    "shipping": MessageLookupByLibrary.simpleMessage("Shipping"),
+    "submitReview": MessageLookupByLibrary.simpleMessage("Submit Review"),
+    "submitReviewInfo": MessageLookupByLibrary.simpleMessage(
+      "Submit your review to get 5 points",
+    ),
+    "subtotal": MessageLookupByLibrary.simpleMessage("Subtotal"),
     "title": MessageLookupByLibrary.simpleMessage("this is english version"),
+    "total": MessageLookupByLibrary.simpleMessage("Total"),
+    "trackingNumber": MessageLookupByLibrary.simpleMessage("Tracking number"),
+    "uploadCamera": MessageLookupByLibrary.simpleMessage("Camera"),
+    "uploadImage": MessageLookupByLibrary.simpleMessage("Image"),
+    "yourOrderIs": MessageLookupByLibrary.simpleMessage("Your order is"),
   };
 }

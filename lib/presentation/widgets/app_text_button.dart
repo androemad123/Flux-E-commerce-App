@@ -73,7 +73,7 @@ class AppTextButton extends StatelessWidget {
                   ],
                   Text(
                     text,
-                    style: boldStyle(fontSize: 16, color: Colors.white)
+                    style: boldStyle(fontSize: fontSize , color: Colors.white)
                   ),
                 ],
               ),

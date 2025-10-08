@@ -1,17 +1,14 @@
 import 'package:depi_graduation/core/di/setup_service_locator.dart';
-import 'package:depi_graduation/data/auth/auth_data_source.dart';
 import 'package:depi_graduation/cubit/auth/auth_cubit.dart';
 import 'package:depi_graduation/presentation/auth/login/login_view.dart';
 import 'package:depi_graduation/presentation/auth/register/register_view.dart';
-import 'package:depi_graduation/firebase_services/firebase_auth_services.dart';
 import 'package:depi_graduation/presentation/home/base_home_screen.dart';
+import 'package:depi_graduation/presentation/my%20orders/my_orders_screen.dart';
 import 'package:depi_graduation/presentation/onboarding/welcome_screen.dart';
-import 'package:depi_graduation/presentation/sign%20up/sign_up_screen.dart';
 import 'package:depi_graduation/routing/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../presentation/login/login_screen.dart';
 import '../presentation/onboarding/onboarding_screen.dart';
 import '../presentation/product details/product_details_screen.dart';
 
@@ -36,6 +33,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => ProductDetailsScreen());
       case Routes.welcomeScreen:
         return MaterialPageRoute(builder: (_) => WelcomeScreen());
+      case Routes.ordersScreen:
+        return MaterialPageRoute(builder: (_) => MyOrdersScreen());
 
       default:
         return unDefinedRoute();
