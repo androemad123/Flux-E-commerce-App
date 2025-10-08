@@ -34,13 +34,15 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
 
 
   // dummy data
+  Map<String, dynamic> get currentCategoryData {
+
   final Map<String, Map<String, dynamic>> categoryData = {
     "Women": {
       "slider_images": [
         "https://images.pexels.com/photos/974911/pexels-photo-974911.jpeg",
         "https://images.pexels.com/photos/994523/pexels-photo-994523.jpeg",
         "https://images.pexels.com/photos/1375736/pexels-photo-1375736.jpeg",
-            "https://images.pexels.com/photos/994523/pexels-photo-994523.jpeg"
+        "https://images.pexels.com/photos/994523/pexels-photo-994523.jpeg"
       ],
       "products": [
         {
@@ -229,23 +231,206 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
       ]
     }
   };
-
-
-  Map<String, dynamic> get currentCategoryData {
     return categoryData[categoryNames[selectedIndex]] ?? {};
   }
+  bool isDark = true;
+
+  // final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(
         backgroundColor: ColorManager.whiteLight,
-        title: Center(child: Text("GemStore" , style: boldStyle(fontSize: FontSize.s16, color: ColorManager.primaryLight)),),
-        leading: IconButton(onPressed: () {}, icon: Icon(Icons.menu , color: ColorManager.primaryLight,)),
+        title: Center(child: Text("GemStore" , style: boldStyle(fontSize: FontSize.s18, color: ColorManager.primaryLight)),),
+        leading: IconButton(onPressed: () {
+              // _scaffoldKey.currentState!.openDrawer();
+        }, icon: Icon(Icons.menu , color: ColorManager.primaryLight, size: AppSize.s28,)),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.notifications , color: ColorManager.primaryLight,))
+          IconButton(onPressed: () {}, icon: Icon(Icons.notifications , color: ColorManager.primaryLight,size: AppSize.s28))
         ],
       ),
+
+      drawer: Drawer(
+        backgroundColor: ColorManager.whiteLight,
+
+        child: ListView(
+          children: [
+            DrawerHeader(
+              child: Center(
+                child: ListTile(
+                  leading: CircleAvatar(
+                    radius: 30.r,
+                    backgroundImage: NetworkImage("https://wallpapers.com/images/hd/generic-male-avatar-icon-piiktqtfffyzulft.jpg"),
+                  ),
+                  title: Text("Name of user" , style: TextStyle(
+                    fontWeight: FontWeightManager.bold,
+                    color: ColorManager.primaryLight,
+                  ),),
+                  subtitle: Text("his email", style: TextStyle(
+                    fontWeight: FontWeightManager.bold,
+                    color: ColorManager.primaryLight,
+                    fontSize: FontSize.s16,
+                  ),),
+                ),
+              ),
+            ),
+            ListTile(leading: Icon(Icons.home , size: AppSize.s30,),
+                title: Text('Home' , style: TextStyle(
+                  fontSize: FontSize.s18,
+                  fontWeight: FontWeightManager.bold,
+                ),),
+              onTap: (){},
+            ),
+            ListTile(leading: Icon(Icons.search , size: AppSize.s30,),
+                title: Text('Discover' , style: TextStyle(
+                  fontSize: FontSize.s18,
+                  fontWeight: FontWeightManager.bold,
+                ),),
+              onTap: (){},
+            ),
+            ListTile(leading: Icon(Icons.shopping_bag , size: AppSize.s30,),
+                title: Text('My Order' , style: TextStyle(
+                  fontSize: FontSize.s18,
+                  fontWeight: FontWeightManager.bold,
+                ),),
+              onTap: (){},
+            ),
+            ListTile(leading: Icon(Icons.person , size: AppSize.s30,),
+                title: Text('My Profile' , style: TextStyle(
+                  fontSize: FontSize.s18,
+                  fontWeight: FontWeightManager.bold,
+                ),),
+              onTap: (){},
+            ),
+
+            Padding(
+              padding: EdgeInsets.all(AppPadding.p8),
+              child: ListTile(title: Text('OTHER', style: TextStyle(
+                fontSize: FontSize.s18,
+              ),),),
+            ),
+            ListTile(leading: Icon(Icons.settings , size: AppSize.s30,),
+                title: Text('Settings' , style: TextStyle(
+                  fontSize: FontSize.s18,
+                  fontWeight: FontWeightManager.bold,
+                ),),
+              onTap: (){},
+            ),
+            ListTile(leading: Icon(Icons.mail_outline_sharp , size: AppSize.s30,),
+                title: Text('Support' , style: TextStyle(
+                  fontSize: FontSize.s18,
+                  fontWeight: FontWeightManager.bold,
+                ),),
+              onTap: (){},
+            ),
+            ListTile(leading: Icon(Icons.info_outline , size: AppSize.s30,),
+                title: Text('About us' , style: TextStyle(
+                  fontSize: FontSize.s18,
+                  fontWeight: FontWeightManager.bold,
+                ),),
+              onTap: (){},
+            ),
+            SizedBox(height:20.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppPadding.p8),
+              child: Container(
+                decoration: BoxDecoration(
+                   color: ColorManager.lighterGrayLight,
+                   borderRadius: BorderRadius.circular(25.r),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(AppPadding.p4),
+                  child: Row(
+                    children: [
+
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isDark = false;
+                              print(isDark);
+                              print("Must FALSSSSE");
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                            decoration: BoxDecoration(
+                              color: !isDark ? ColorManager.whiteLight :Colors.transparent,
+                              borderRadius: BorderRadius.circular(25.r),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  Icons.wb_sunny_outlined,
+                                  size: AppSize.s28,
+                                  color: Colors.black,
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  'Light',
+                                  style: TextStyle(
+                                    fontWeight: !isDark ? FontWeightManager.bold:FontWeightManager.regular,
+                                    fontSize: FontSize.s18,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+
+                            setState(() {
+                              isDark=true;
+                              print(isDark);
+                              print("Must TRRRUEE");
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                            decoration: BoxDecoration(
+                              color: isDark ? ColorManager.whiteLight : Colors.transparent,
+                              borderRadius: BorderRadius.circular(25.r),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  Icons.dark_mode_outlined,
+                                  size: AppSize.s28,
+                                  color: Colors.black,
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  'Dark',
+                                  style: TextStyle(
+                                    fontWeight: isDark? FontWeightManager.bold : FontWeightManager.regular,
+                                    fontSize: FontSize.s18,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+
+
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(AppPadding.p12),

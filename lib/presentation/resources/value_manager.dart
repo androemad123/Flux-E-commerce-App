@@ -11,6 +11,7 @@ class AppMargin {
 }
 
 class AppPadding {
+  static double p4 = 4.w;
   static double p8 = 8.w;
   static double p10 = 10.w;
   static double p12 = 12.w;
@@ -31,4 +32,8 @@ class AppSize {
   static double s16 = 16.r;
   static double s18 = 18.r;
   static double s20 = 20.r;
+  static double s26 = 26.r;
+  static double s28 = 28.r;
+  static double s30 = 30.r;
+  static double s32 = 32.r;
 }
