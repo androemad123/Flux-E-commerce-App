@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppTextButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final double? width;
   final double? height;
   final EdgeInsetsGeometry? padding;
@@ -15,11 +15,12 @@ class AppTextButton extends StatelessWidget {
   final double fontSize;
   final FontWeight fontWeight;
   final IconData? icon; // optional icon
+  final bool isLoading;
 
   const AppTextButton({
     Key? key,
     required this.text,
-    required this.onPressed,
+    this.onPressed,
     this.width,
     this.height,
     this.padding,
@@ -29,6 +30,7 @@ class AppTextButton extends StatelessWidget {
     this.fontSize = 16,
     this.fontWeight = FontWeight.bold,
     this.icon,
+    this.isLoading = false,
   }) : super(key: key);
 
   @override
@@ -45,25 +47,36 @@ class AppTextButton extends StatelessWidget {
           ),
           elevation: 4,
         ),
-        onPressed: onPressed,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon != null) ...[
-              Icon(
-                icon,
-                color: textColor ?? Colors.white,
-                size: (fontSize + 2).sp, // responsive icon size
+        onPressed: isLoading ? null : onPressed,
+        child: isLoading
+            ? SizedBox(
+                width: 20.w,
+                height: 20.h,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    textColor ?? Colors.white,
+                  ),
+                ),
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (icon != null) ...[
+                    Icon(
+                      icon,
+                      color: textColor ?? Colors.white,
+                      size: (fontSize + 2).sp, // responsive icon size
+                    ),
+                    SizedBox(width: 8.w),
+                  ],
+                  Text(
+                    text,
+                    style: boldStyle(fontSize: fontSize , color: Colors.white)
+                  ),
+                ],
               ),
-              SizedBox(width: 8.w),
-            ],
-            Text(
-              text,
-              style: boldStyle(fontSize: 16, color: Colors.white)
-            ),
-          ],
-        ),
       ),
     );
   }

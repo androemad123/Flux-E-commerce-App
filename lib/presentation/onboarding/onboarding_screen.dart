@@ -1,6 +1,7 @@
 import 'package:depi_graduation/presentation/onboarding/subScreens/final_screen.dart';
 import 'package:depi_graduation/presentation/onboarding/subScreens/first_screen.dart';
 import 'package:depi_graduation/presentation/onboarding/subScreens/second_screen.dart';
+import 'package:depi_graduation/presentation/resources/color_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -46,14 +47,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Stack(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 1,
+                height: (MediaQuery.of(context).size.height * 1),
                 child: PageView.builder(
                   itemBuilder: (context, index) {
                     return PageView(
                       onPageChanged: _onPageChanged,
                       controller: _pageController,
                       physics: const BouncingScrollPhysics(),
-
                       children: [
                         const FirstScreen(),
                         const SecondScreen(),
@@ -64,7 +64,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
               Positioned(
-                bottom: MediaQuery.of(context).size.height * 0.18,
+                bottom: (MediaQuery.of(context).size.height * 0.18),
                 left: 0,
                 right: 0,
                 child: Row(
@@ -72,14 +72,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   children: List.generate(3, (index) {
                     return AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
-                      margin: EdgeInsets.symmetric(horizontal: 6),
-                      width: _currentPage == index ? 16 : 8,
-                      height: 8,
+                      margin: EdgeInsets.symmetric(horizontal: 6.w),
+                      width: _currentPage == index ? 16.w : 8.w,
+                      height: 8.h,
                       decoration: BoxDecoration(
-                        color:
-                            _currentPage == index
-                                ? Colors.white
-                                : Colors.white.withOpacity(0.5),
+                        color: _currentPage == index
+                            ? Colors.white
+                            : Colors.white.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(4.r),
                       ),
                     );
@@ -88,8 +87,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
               Positioned(
                 bottom: MediaQuery.of(context).size.height * 0.1,
-                left:
-                    (MediaQuery.of(context).size.width / 2) -
+                left: (MediaQuery.of(context).size.width / 2) -
                     65, // Center the button
                 child: OutlinedButton(
                   onPressed: _goToNextPage,
@@ -97,17 +95,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     backgroundColor: Colors.grey.withOpacity(0.9),
                     side: const BorderSide(color: Colors.white),
                     padding: EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
+                      horizontal: 20.w,
+                      vertical: 10.h,
                     ),
                   ),
-                  child: Text(
-                    'Shopping Now',
-                    style: TextStyle(color: Colors.white),
+                  child: GestureDetector(
+                    onTap: () {
+                      // Navigate to the next screen or perform an action
+                      Navigator.pushNamed(context,
+                          "/loginRoute"); // Replace with your route
+                    },
+                    child: Text(
+                      'Shopping Now',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ),
-              
             ],
           ),
         ],

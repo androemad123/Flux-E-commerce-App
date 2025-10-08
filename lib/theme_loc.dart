@@ -1,4 +1,3 @@
-import 'package:depi_graduation/presentation/resources/color_manager.dart';
 import 'package:depi_graduation/presentation/widgets/app_text_button.dart';
 import 'package:depi_graduation/presentation/widgets/app_text_field.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../../app/provider/language_provider.dart';
 import '../../app/provider/theme_provider.dart';
 import '../../generated/l10n.dart';
+import 'presentation/widgets/app_text_field.dart';
 
 
 class ThemeLoc extends StatefulWidget {
@@ -30,7 +30,6 @@ class _ThemeLoc extends State<ThemeLoc> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           AppTextButton(
-             width: 200.w,
             text: themeProvider.isDarkMode
                 ? "Switch to Light and en"
                 : "Switch to Dark and ar",
@@ -41,7 +40,6 @@ class _ThemeLoc extends State<ThemeLoc> {
           ),
           SizedBox(height: 20.h,),
           AppTextButton(
-            width: 200.w,
             text: themeProvider.isDarkMode
                 ? "Switch to Light"
                 : "Switch to Dark ",

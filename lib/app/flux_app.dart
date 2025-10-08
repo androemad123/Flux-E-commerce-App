@@ -3,11 +3,13 @@ import 'package:depi_graduation/app/provider/theme_provider.dart';
 import 'package:depi_graduation/routing/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+
 import '../generated/l10n.dart';
 import '../presentation/resources/theme_manager.dart';
 import '../routing/routes.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class FluxApp extends StatefulWidget {
   // private constructor for singleton
   FluxApp._internal({required this.appRouter});
@@ -16,7 +18,8 @@ class FluxApp extends StatefulWidget {
 
   final AppRouter appRouter;
 
-  factory FluxApp({required AppRouter appRouter}) {
+  factory
+  FluxApp({required AppRouter appRouter}) {
     // create only one instance
     //singleton DP
     _instance ??= FluxApp._internal(appRouter: appRouter);
@@ -39,7 +42,7 @@ class _FluxAppState extends State<FluxApp> {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
-          theme: AppTheme.lightTheme,  // Light theme
+          theme: AppTheme.lightTheme, // Light theme
           darkTheme: AppTheme.darkTheme, // Dark theme
           themeMode: themeProvider.themeMode,
           locale: languageProvider.locale,
@@ -51,7 +54,9 @@ class _FluxAppState extends State<FluxApp> {
           ],
           supportedLocales: S.delegate.supportedLocales,
           debugShowCheckedModeBanner: false,
-          initialRoute: Routes.homeRoute,
+
+          initialRoute: Routes.onboardingRoute,
+
           onGenerateRoute: widget.appRouter.generateRoute,
         );
       },

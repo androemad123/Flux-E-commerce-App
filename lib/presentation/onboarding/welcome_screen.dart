@@ -1,3 +1,5 @@
+import 'package:depi_graduation/presentation/resources/color_manager.dart';
+import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -34,11 +36,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               SizedBox(height: 420.h), // Adjust height as needed
               Center(
                 child: Text(
-                  'Welcome to Our App',
+                  'Welcome to Flux Store',
                   style: TextStyle(
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    fontSize: FontSize.s24,
+                    fontWeight: FontWeightManager.bold,
+                    color: ColorManager.whiteLight,
                   ),
                 ),
               ),
@@ -46,8 +48,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               Text(
                 'The home for a fashionista',
                 style: TextStyle(
-                  fontSize: 16.sp,
-                  color: Colors.white,
+                  fontSize: FontSize.s16,
+                  fontWeight: FontWeightManager.regular,
+                  color: ColorManager.whiteLight,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -55,7 +58,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               OutlinedButton(
                 style: OutlinedButton.styleFrom(
                   backgroundColor: Colors.grey.withOpacity(0.9),
-                  side: const BorderSide(color: Colors.white),
+                  side: BorderSide(color: ColorManager.whiteLight),
                   padding: EdgeInsets.symmetric(
                     horizontal: 40.w,
                     vertical: 10.h,
@@ -66,8 +69,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   Navigator.pushNamed(
                       context, '/onboardingRoute'); // Replace with your route
                 },
-                child:
-                    Text('Get Started', style: TextStyle(color: Colors.white, fontSize: 16.sp)),
+                child: Text('Get Started',
+                    style: TextStyle(
+                      fontSize: FontSize.s16,
+                      fontWeight: FontWeightManager.regular,
+                      color: ColorManager.whiteLight,
+                    )),
               ),
             ],
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'color_manager.dart';
 
 class AppTheme {
@@ -6,7 +7,7 @@ class AppTheme {
     brightness: Brightness.light,
     primaryColor: ColorManager.primaryLight,
     scaffoldBackgroundColor: ColorManager.whiteLight,
-    cardColor: ColorManager.lightGrayLight,
+    cardColor: Colors.white,
     appBarTheme: AppBarTheme(
       backgroundColor: ColorManager.primaryLight,
       foregroundColor: ColorManager.whiteLight,
@@ -25,7 +26,8 @@ class AppTheme {
       primary: ColorManager.primaryLight,
       secondary: ColorManager.greenLight,
       error: ColorManager.errorLight,
-      surface: ColorManager.lightGrayLight,
+      surface: ColorManager.whiteLight,
+      shadow: ColorManager.lighterGrayLight,
       onPrimary: ColorManager.whiteLight,
       onSecondary: ColorManager.whiteLight,
       onError: ColorManager.whiteLight,
@@ -37,7 +39,7 @@ class AppTheme {
     brightness: Brightness.dark,
     primaryColor: ColorManager.primaryDark,
     scaffoldBackgroundColor: ColorManager.whiteDark,
-    cardColor: ColorManager.lightGrayDark,
+    cardColor: Colors.white,
     appBarTheme: AppBarTheme(
       backgroundColor: ColorManager.primaryDark,
       foregroundColor: ColorManager.whiteDark,
@@ -56,7 +58,8 @@ class AppTheme {
       primary: ColorManager.primaryDark,
       secondary: ColorManager.greenDark,
       error: ColorManager.errorDark,
-      surface: ColorManager.lightGrayDark,
+      surface: ColorManager.whiteDark,
+      shadow: ColorManager.lighterGrayDark,
       onPrimary: ColorManager.whiteDark,
       onSecondary: ColorManager.whiteDark,
       onError: ColorManager.whiteDark,
