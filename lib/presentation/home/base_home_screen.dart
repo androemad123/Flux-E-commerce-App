@@ -1,9 +1,15 @@
+import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductBLoC.dart';
+import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductEvent.dart';
+import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductState.dart';
+import 'package:depi_graduation/presentation/home/my_profile.dart';
 import 'package:depi_graduation/presentation/resources/color_manager.dart';
 import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:depi_graduation/presentation/resources/value_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../routing/routes.dart';
 import '../resources/styles_manager.dart';
 
 class BaseHomeScreen extends StatefulWidget {
@@ -35,26 +41,6 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
         "https://images.pexels.com/photos/994523/pexels-photo-994523.jpeg",
         "https://images.pexels.com/photos/1375736/pexels-photo-1375736.jpeg",
         "https://images.pexels.com/photos/994523/pexels-photo-994523.jpeg"
-      ],
-      "products": [
-        {
-          "name": "Turtleneck Sweater",
-          "price": 39.99,
-          "image":
-              "https://images.pexels.com/photos/428338/pexels-photo-428338.jpeg"
-        },
-        {
-          "name": "Long Sleeve Dress",
-          "price": 45.00,
-          "image":
-              "https://images.pexels.com/photos/2065200/pexels-photo-2065200.jpeg"
-        },
-        {
-          "name": "Blouse",
-          "price": 29.99,
-          "image":
-              "https://images.pexels.com/photos/994523/pexels-photo-994523.jpeg"
-        },
       ],
       "header_image":
           "https://images.pexels.com/photos/1375736/pexels-photo-1375736.jpeg",
@@ -91,26 +77,6 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
         "https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg",
         "https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg"
       ],
-      "products": [
-        {
-          "name": "Men's Shirt",
-          "price": 49.99,
-          "image":
-              "https://images.pexels.com/photos/769733/pexels-photo-769733.jpeg"
-        },
-        {
-          "name": "Men's Jacket",
-          "price": 89.99,
-          "image":
-              "https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg"
-        },
-        {
-          "name": "Men's Pants",
-          "price": 59.99,
-          "image":
-              "https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg"
-        },
-      ],
       "header_image":
           "https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg",
       "recommended": [
@@ -145,26 +111,6 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
         "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg",
         "https://images.pexels.com/photos/702251/pexels-photo-702251.jpeg",
         "https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg"
-      ],
-      "products": [
-        {
-          "name": "Leather Watch",
-          "price": 120.00,
-          "image":
-              "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg"
-        },
-        {
-          "name": "Sunglasses",
-          "price": 75.00,
-          "image":
-              "https://images.pexels.com/photos/702251/pexels-photo-702251.jpeg"
-        },
-        {
-          "name": "Handbag",
-          "price": 95.00,
-          "image":
-              "https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg"
-        },
       ],
       "header_image":
           "https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg",
@@ -201,26 +147,6 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
         "https://images.pexels.com/photos/1040424/pexels-photo-1040424.jpeg",
         "https://images.pexels.com/photos/3373739/pexels-photo-3373739.jpeg"
       ],
-      "products": [
-        {
-          "name": "Makeup Kit",
-          "price": 65.00,
-          "image":
-              "https://images.pexels.com/photos/2536965/pexels-photo-2536965.jpeg"
-        },
-        {
-          "name": "Perfume",
-          "price": 85.00,
-          "image":
-              "https://images.pexels.com/photos/1040424/pexels-photo-1040424.jpeg"
-        },
-        {
-          "name": "Skincare Set",
-          "price": 110.00,
-          "image":
-              "https://images.pexels.com/photos/3373739/pexels-photo-3373739.jpeg"
-        },
-      ],
       "header_image":
           "https://images.pexels.com/photos/3373739/pexels-photo-3373739.jpeg",
       "recommended": [
@@ -256,9 +182,13 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
     return categoryData[categoryNames[selectedIndex]] ?? {};
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool isDark =true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: ColorManager.whiteLight,
         title: Center(
@@ -267,7 +197,9 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
                   fontSize: FontSize.s16, color: ColorManager.primaryLight)),
         ),
         leading: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              _scaffoldKey.currentState?.openDrawer();
+            },
             icon: Icon(
               Icons.menu,
               color: ColorManager.primaryLight,
@@ -281,6 +213,185 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
               ))
         ],
       ),
+
+      drawer: Drawer(
+      backgroundColor: ColorManager.whiteLight,
+
+      child: ListView(
+        children: [
+          DrawerHeader(
+            child: Center(
+              child: ListTile(
+                leading: CircleAvatar(
+                  radius: 30.r,
+                  backgroundImage: NetworkImage("https://wallpapers.com/images/hd/generic-male-avatar-icon-piiktqtfffyzulft.jpg"),
+                ),
+                title: Text("Name of user" , style: TextStyle(
+                  fontWeight: FontWeightManager.bold,
+                  color: ColorManager.primaryLight,
+                ),),
+                subtitle: Text("his email", style: TextStyle(
+                  fontWeight: FontWeightManager.regular,
+                  color: ColorManager.primaryLight,
+                  fontSize: FontSize.s16,
+                ),),
+              ),
+            ),
+          ),
+          ListTile(leading: Icon(Icons.home , size: AppSize.s30,),
+            title: Text('Home' , style: TextStyle(
+              fontSize: FontSize.s18,
+              fontWeight: FontWeightManager.bold,
+            ),),
+            onTap: (){},
+          ),
+          ListTile(leading: Icon(Icons.search , size: AppSize.s30,),
+            title: Text('Discover' , style: TextStyle(
+              fontSize: FontSize.s18,
+              fontWeight: FontWeightManager.bold,
+            ),),
+            onTap: (){},
+          ),
+          ListTile(leading: Icon(Icons.shopping_bag , size: AppSize.s30,),
+            title: Text('My Order' , style: TextStyle(
+              fontSize: FontSize.s18,
+              fontWeight: FontWeightManager.bold,
+            ),),
+            onTap: (){},
+          ),
+          ListTile(leading: Icon(Icons.person , size: AppSize.s30,),
+            title: Text('My Profile' , style: TextStyle(
+              fontSize: FontSize.s18,
+              fontWeight: FontWeightManager.bold,
+            ),),
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> my_profile()));
+            },
+          ),
+
+          Padding(
+            padding: EdgeInsets.all(AppPadding.p8),
+            child: ListTile(title: Text('OTHER', style: TextStyle(
+              fontSize: FontSize.s18,
+            ),),),
+          ),
+          ListTile(leading: Icon(Icons.settings , size: AppSize.s30,),
+            title: Text('Settings' , style: TextStyle(
+              fontSize: FontSize.s18,
+              fontWeight: FontWeightManager.bold,
+            ),),
+            onTap: (){
+
+            },
+          ),
+          ListTile(leading: Icon(Icons.mail_outline_sharp , size: AppSize.s30,),
+            title: Text('Support' , style: TextStyle(
+              fontSize: FontSize.s18,
+              fontWeight: FontWeightManager.bold,
+            ),),
+            onTap: (){},
+          ),
+          ListTile(leading: Icon(Icons.info_outline , size: AppSize.s30,),
+            title: Text('About us' , style: TextStyle(
+              fontSize: FontSize.s18,
+              fontWeight: FontWeightManager.bold,
+            ),),
+            onTap: (){},
+          ),
+          SizedBox(height:10.h),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppPadding.p8),
+            child: Container(
+              decoration: BoxDecoration(
+                color: ColorManager.lighterGrayLight,
+                borderRadius: BorderRadius.circular(25.r),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(AppPadding.p4),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isDark = false;
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: !isDark ? ColorManager.whiteLight :Colors.transparent,
+                            borderRadius: BorderRadius.circular(25.r),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.wb_sunny_outlined,
+                                size: AppSize.s28,
+                                color: Colors.black,
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                'Light',
+                                style: TextStyle(
+                                  fontWeight: !isDark ? FontWeightManager.bold:FontWeightManager.regular,
+                                  fontSize: FontSize.s18,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isDark=true;
+                          });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: isDark ? ColorManager.whiteLight : Colors.transparent,
+                            borderRadius: BorderRadius.circular(25.r),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.dark_mode_outlined,
+                                size: AppSize.s28,
+                                color: Colors.black,
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                'Dark',
+                                style: TextStyle(
+                                  fontWeight: isDark? FontWeightManager.bold : FontWeightManager.regular,
+                                  fontSize: FontSize.s18,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
+
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+
+
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(AppPadding.p12),
@@ -314,6 +425,7 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
             setState(() {
               selectedIndex = index;
             });
+            context.read<ProductBLoC>().add(LoadCategoryProduct(ProductCategotry: categoryNames[index]));
           },
           child: Column(
             children: [
@@ -439,82 +551,87 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
   }
 
   Widget _buildFeaturedProductsSection() {
-    final products = (currentCategoryData["products"] as List<dynamic>?)
-            ?.cast<Map<String, dynamic>>() ??
-        [];
-
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppPadding.p12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "Featured Products",
-                style: boldStyle(
-                  fontSize: FontSize.s14,
-                  color: ColorManager.darkGrayLight,
+    return BlocBuilder<ProductBLoC,ProductState>(builder: (context,state){
+      final products = state.product;
+      return Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppPadding.p12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Featured Products",
+                  style: boldStyle(
+                    fontSize: FontSize.s14,
+                    color: ColorManager.darkGrayLight,
+                  ),
                 ),
-              ),
-              Text(
-                "Show all",
-                style: regularStyle(
-                  fontSize: FontSize.s12,
-                  color: ColorManager.lightGrayLight,
+                Text(
+                  "Show all",
+                  style: regularStyle(
+                    fontSize: FontSize.s12,
+                    color: ColorManager.lightGrayLight,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        SizedBox(height: 15.h),
-        SizedBox(
-          height: 277.h, //200
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: products.length,
-            itemBuilder: (context, index) {
-              final product = products[index];
-              return Container(
-                width: 120.w,
-                margin: EdgeInsets.only(right: 12.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12.r),
-                      child: Image.network(
-                        product["image"],
-                        height: 190.h,
-                        width: 120.w,
-                        fit: BoxFit.cover,
-                      ),
+          SizedBox(height: 15.h),
+          SizedBox(
+            height: 277.h, //200
+            child: products.isEmpty ? Text("No product found") : ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: products.length,
+              itemBuilder: (context, index) {
+                final product = products[index];
+                return GestureDetector(
+                  onTap: (){
+                    Navigator.pushNamed(context, Routes.orderDetailsScreen, arguments: product.ProductID);
+                  },
+                  child: Container(
+                    width: 120.w,
+                    margin: EdgeInsets.only(right: 12.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12.r),
+                          child: Image.network(
+                            product.ProductImageURL,
+                            height: 190.h,
+                            width: 120.w,
+                            fit: BoxFit.cover,
+                            errorBuilder:  (context, error, stackTrace) => Icon(Icons.image_not_supported , size: AppSize.s32,),
+                          ),
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          product.ProductName,
+                          style: regularStyle(
+                            color: ColorManager.primaryLight,
+                            fontSize: FontSize.s12,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          "\$${product.ProductPrice.toStringAsFixed(2)}",
+                          style: boldStyle(
+                            color: ColorManager.primaryLight,
+                            fontSize: FontSize.s14,
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 8.h),
-                    Text(
-                      product["name"],
-                      style: regularStyle(
-                        color: ColorManager.primaryLight,
-                        fontSize: FontSize.s12,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      "\$${product["price"].toStringAsFixed(2)}",
-                      style: boldStyle(
-                        color: ColorManager.primaryLight,
-                        fontSize: FontSize.s14,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
+                  ),
+                );
+              },
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 
   Widget _buildPromoBanner() {
