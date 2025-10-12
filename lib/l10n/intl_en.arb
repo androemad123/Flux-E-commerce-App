@@ -1,5 +1,34 @@
 {
   "title" : "this is english version",
   "email" : "write your email here ",
-  "key" : "value"
+  "key" : "value",
+
+  "myOrdersTitle": "My Orders",
+  "noOrders": "No {status} orders",
+
+  "pending": "Pending",
+  "delivered": "Delivered",
+  "cancelled": "Cancelled",
+
+  "details": "Details",
+  "trackingNumber": "Tracking number",
+  "quantity": "Quantity",
+  "subtotal": "Subtotal",
+  "yourOrderIs": "Your order is",
+  "orderNumber": "Order number",
+  "deliveryAddress": "Delivery address",
+  "shipping": "Shipping",
+  "total": "Total",
+  "returnHome": "Return home",
+  "rate": "Rate",
+
+  "continueShopping": "Continue shopping",
+  "rateProductTitle": "Rate Product",
+  "submitReviewInfo": "Submit your review to get 5 points",
+  "ratingHint": "Tap stars to rate",
+  "reviewFieldHint": "Would you like to write anything about this product?",
+  "uploadImage": "Image",
+  "uploadCamera": "Camera",
+  "submitReview": "Submit Review"
+
 }

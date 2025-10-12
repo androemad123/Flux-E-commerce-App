@@ -1,6 +1,35 @@
 {
-  "title" : "دي النسخة العربي",
-  "email" : "اكتب هنا الميل",
-  "key" : "قيمة"
+  "title": "هذا هو الإصدار العربي",
+  "email": "اكتب بريدك الإلكتروني هنا",
+  "key": "قيمة",
+
+  "myOrdersTitle": "طلباتي",
+  "noOrders": "لا توجد طلبات {status}",
+
+  "pending": "قيد الانتظار",
+  "delivered": "تم التوصيل",
+  "cancelled": "أُلغيت",
+
+  "details": "التفاصيل",
+  "trackingNumber": "رقم التتبع",
+  "quantity": "الكمية",
+  "subtotal": "المجموع",
+  "yourOrderIs": "طلبك",
+  "orderNumber": "رقم الطلب",
+  "deliveryAddress": "عنوان التوصيل",
+  "shipping": "الشحن",
+  "total": "الإجمالي",
+  "returnHome": "العودة للرئيسية",
+  "rate": "تقييم",
+  "continueShopping": "اكمل التسوق",
+
+  "rateProductTitle": "تقييم المنتج",
+  "submitReviewInfo": "قم بتقديم مراجعتك لتحصل على 5 نقاط",
+  "ratingHint": "اضغط على النجوم للتقييم",
+  "reviewFieldHint": "هل تود كتابة شيء عن هذا المنتج؟",
+  "uploadImage": "صورة",
+  "uploadCamera": "الكاميرا",
+  "submitReview": "إرسال التقييم"
+
 
 }

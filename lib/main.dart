@@ -1,4 +1,5 @@
 import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductBLoC.dart';
+import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductEvent.dart';
 import 'package:depi_graduation/core/di/setup_service_locator.dart';
 import 'package:depi_graduation/firebase_options.dart';
 import 'package:depi_graduation/routing/app_router.dart';
@@ -30,7 +31,7 @@ void main() async {
       child: MultiBlocProvider(
         providers: [
           BlocProvider<ProductBLoC>(
-            create: (_) => ProductBLoC(),
+            create: (_) => ProductBLoC()..add(LoadAllProducts()),
           ),
         ],
         child: FluxApp(appRouter: AppRouter()),

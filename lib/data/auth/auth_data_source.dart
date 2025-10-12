@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:depi_graduation/firebase_services/firebase_auth_services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class AuthDataSource {
   Future<String> login(String email, String password);

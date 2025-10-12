@@ -30,7 +30,6 @@ class _ThemeLoc extends State<ThemeLoc> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           AppTextButton(
-             width: 200.w,
             text: themeProvider.isDarkMode
                 ? "Switch to Light and en"
                 : "Switch to Dark and ar",
@@ -41,7 +40,6 @@ class _ThemeLoc extends State<ThemeLoc> {
           ),
           SizedBox(height: 20.h,),
           AppTextButton(
-            width: 200.w,
             text: themeProvider.isDarkMode
                 ? "Switch to Light"
                 : "Switch to Dark ",

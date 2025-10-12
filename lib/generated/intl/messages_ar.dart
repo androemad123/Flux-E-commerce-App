@@ -20,10 +20,42 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ar';
 
+  static String m0(status) => "لا توجد طلبات ${status}";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-    "email": MessageLookupByLibrary.simpleMessage("اكتب هنا الميل"),
+    "cancelled": MessageLookupByLibrary.simpleMessage("أُلغيت"),
+    "continueShopping": MessageLookupByLibrary.simpleMessage("اكمل التسوق"),
+    "delivered": MessageLookupByLibrary.simpleMessage("تم التوصيل"),
+    "deliveryAddress": MessageLookupByLibrary.simpleMessage("عنوان التوصيل"),
+    "details": MessageLookupByLibrary.simpleMessage("التفاصيل"),
+    "email": MessageLookupByLibrary.simpleMessage("اكتب بريدك الإلكتروني هنا"),
     "key": MessageLookupByLibrary.simpleMessage("قيمة"),
-    "title": MessageLookupByLibrary.simpleMessage("دي النسخة العربي"),
+    "myOrdersTitle": MessageLookupByLibrary.simpleMessage("طلباتي"),
+    "noOrders": m0,
+    "orderNumber": MessageLookupByLibrary.simpleMessage("رقم الطلب"),
+    "pending": MessageLookupByLibrary.simpleMessage("قيد الانتظار"),
+    "quantity": MessageLookupByLibrary.simpleMessage("الكمية"),
+    "rate": MessageLookupByLibrary.simpleMessage("تقييم"),
+    "rateProductTitle": MessageLookupByLibrary.simpleMessage("تقييم المنتج"),
+    "ratingHint": MessageLookupByLibrary.simpleMessage(
+      "اضغط على النجوم للتقييم",
+    ),
+    "returnHome": MessageLookupByLibrary.simpleMessage("العودة للرئيسية"),
+    "reviewFieldHint": MessageLookupByLibrary.simpleMessage(
+      "هل تود كتابة شيء عن هذا المنتج؟",
+    ),
+    "shipping": MessageLookupByLibrary.simpleMessage("الشحن"),
+    "submitReview": MessageLookupByLibrary.simpleMessage("إرسال التقييم"),
+    "submitReviewInfo": MessageLookupByLibrary.simpleMessage(
+      "قم بتقديم مراجعتك لتحصل على 5 نقاط",
+    ),
+    "subtotal": MessageLookupByLibrary.simpleMessage("المجموع"),
+    "title": MessageLookupByLibrary.simpleMessage("هذا هو الإصدار العربي"),
+    "total": MessageLookupByLibrary.simpleMessage("الإجمالي"),
+    "trackingNumber": MessageLookupByLibrary.simpleMessage("رقم التتبع"),
+    "uploadCamera": MessageLookupByLibrary.simpleMessage("الكاميرا"),
+    "uploadImage": MessageLookupByLibrary.simpleMessage("صورة"),
+    "yourOrderIs": MessageLookupByLibrary.simpleMessage("طلبك"),
   };
 }
