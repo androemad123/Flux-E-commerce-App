@@ -15,19 +15,17 @@ Future<File> get _localfile async {
   File file = File("$path/ProductData.json");
 
   if (!(await file.exists())) {
-    await file.writeAsString(
-        json.encode(initialProducts.map((e) => e.tojson()).toList()));
+    await _saveProducts(initialProducts);
   } else if ((await file.readAsString()).isEmpty) {
-    await file.writeAsString(
-        json.encode(initialProducts.map((e) => e.tojson()).toList()));
+    await _saveProducts(initialProducts);
   }
 
   return file;
 }
 
-Future<void> _saveProducts(List<Product> product) async {
+Future<void> _saveProducts(List<Product> products) async {
   File file = await _localfile;
-  String jsonData = await json.encode(product.map((e) => e.tojson()).toList());
+  String jsonData = await json.encode(products.map((e) => e.tojson()).toList());
   await file.writeAsString(jsonData);
 }
 
@@ -39,15 +37,10 @@ Future<List<Product>> loadAllProducts() async {
   return content.map((e) => Product.fromJson(e)).toList();
 }
 
-Future<List<Product>> loadCategoryProduct(String ProductCategotry) async {
+Future<Product> loadProduct(String id) async {
   List<Product> allProducts = await loadAllProducts();
-  List<Product> x =
-      allProducts.where((p) => p.ProductCategotry == ProductCategotry).toList();
-  return x;
-}
-
-Future<Product> loadProduct(int id) async {
-  List<Product> allProducts = await loadAllProducts();
+  print('Looking for ID: $id');
+  print('Available IDs: ${allProducts.map((p) => p.ProductID).toList()}');
   final index = allProducts.indexWhere((p) => p.ProductID == id);
 
   if (index != -1) {
@@ -64,4 +57,11 @@ Future<Product> loadProduct(int id) async {
         ProductImageURL: "",
         ProductQuantity: -1,
         isProductBuyed: false);
+}
+
+Future<List<Product>> loadCategoryProduct(String ProductCategotry) async {
+  List<Product> allProducts = await loadAllProducts();
+  List<Product> x =
+      allProducts.where((p) => p.ProductCategotry == ProductCategotry).toList();
+  return x;
 }

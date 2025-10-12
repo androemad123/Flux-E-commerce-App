@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 
 class Product {
@@ -7,12 +5,11 @@ class Product {
   String ProductName;
   String ProductDescription;
   String ProductCategotry;
-  List<Colors> ProductColors;
-  List<Char> ProductSizes;
+  List<MaterialColor> ProductColors;
+  List<String> ProductSizes;
   double ProductPrice;
   String ProductImageURL;
   int ProductQuantity;
-
   bool isProductBuyed;
 
   Product(
@@ -44,7 +41,7 @@ class Product {
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      ProductID: json['ProductID'] ?? 0,
+      ProductID: json['ProductID'] ?? "",
       ProductName: json['ProductName'] ?? 'No Product Name',
       ProductDescription:
           json['ProductDescription'] ?? 'No Product description',
@@ -57,6 +54,16 @@ class Product {
       isProductBuyed: json['isProductBuyed'] ?? false,
     );
   }
+}
+
+class ProductsLoaded extends ProductState {
+  final List<Product> products;
+  ProductsLoaded({required this.products}) : super(product: []);
+}
+
+class ProductLoaded extends ProductState {
+  final Product prod;
+  ProductLoaded({required this.prod}) : super(product: []);
 }
 
 class ProductState {

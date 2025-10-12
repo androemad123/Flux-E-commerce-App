@@ -3,7 +3,7 @@ abstract class ProductEvent {}
 class LoadAllProducts extends ProductEvent {}
 
 class LoadProduct extends ProductEvent {
-  final int ProductID;
+  final String ProductID;
   LoadProduct({required this.ProductID});
 }
 

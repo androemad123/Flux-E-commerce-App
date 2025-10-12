@@ -8,6 +8,7 @@ import 'package:depi_graduation/presentation/onboarding/welcome_screen.dart';
 import 'package:depi_graduation/routing/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../presentation/onboarding/onboarding_screen.dart';
 import '../presentation/product details/product_details_screen.dart';
 
@@ -31,7 +32,10 @@ class AppRouter {
       case Routes.homeRoute:
         return MaterialPageRoute(builder: (_) => BaseHomeScreen());
       case Routes.productDetailsRoute:
-        return MaterialPageRoute(builder: (_) => ProductDetailsScreen());
+        return MaterialPageRoute(
+            builder: (_) => ProductDetailsScreen(
+                  productId: "", //
+                ));
       case Routes.welcomeScreen:
         return MaterialPageRoute(builder: (_) => WelcomeScreen());
 

@@ -1,10 +1,22 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:depi_graduation/presentation/product%20details/subScreens/ProductName&Price.dart';
+import 'package:depi_graduation/presentation/product%20details/subScreens/imageSlider.dart';
+import 'package:depi_graduation/presentation/product%20details/subScreens/productDetailsAppBar.dart';
+import 'package:depi_graduation/presentation/product%20details/subScreens/productDiscription.dart';
+import 'package:depi_graduation/presentation/product%20details/subScreens/productReviews.dart';
+import 'package:depi_graduation/presentation/product%20details/subScreens/product_color_size.dart';
+import 'package:depi_graduation/presentation/product%20details/subScreens/simialProducts.dart';
+import 'package:depi_graduation/presentation/product%20details/subScreens/starsRating.dart';
 import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:depi_graduation/presentation/resources/value_manager.dart';
 import 'package:flutter/material.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
-  const ProductDetailsScreen({super.key});
+  final String productId;
+
+  const ProductDetailsScreen({
+    super.key,
+    required this.productId,
+  });
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
@@ -31,124 +43,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     "85.5",
     "20.00"
   ];
-  final addReview = new TextEditingController();
-  Widget drawIcons(double s) {
-    return Icon(
-      Icons.star,
-      size: s,
-      color: Theme.of(context).colorScheme.secondary,
-    );
-  }
-
-  Widget drawIndicators(int i) {
-    return Row(
-      children: [
-        Text(
-          "${nums[i]}",
-          style: TextStyle(
-              color: Theme.of(context).colorScheme.shadow,
-              fontFamily: FontConstants.fontFamily,
-              fontWeight: FontWeightManager.bold,
-              fontSize: 12),
-        ),
-        SizedBox(
-          width: 3,
-        ),
-        Icon(
-          Icons.star,
-          color: Theme.of(context).colorScheme.secondary,
-          size: 12,
-        ),
-        SizedBox(
-          width: 3,
-        ),
-        Expanded(
-          child: LinearProgressIndicator(
-            borderRadius: BorderRadius.circular(10),
-            value: percentages[i],
-            minHeight: 3,
-            backgroundColor: Theme.of(context).colorScheme.shadow,
-            color: Theme.of(context).colorScheme.secondary,
-          ),
-        ),
-        SizedBox(
-          width: 5,
-        ),
-        //Spacer(),
-        Text("${percentages[i] * 100}%",
-            style: TextStyle(
-                color: Theme.of(context).colorScheme.shadow,
-                fontFamily: FontConstants.fontFamily,
-                fontSize: 12,
-                fontWeight: FontWeightManager.bold)),
-      ],
-    );
-  }
-
-  Widget drawReview(List<String> image, int i) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              // reviewer photo
-              CircleAvatar(
-                radius: 30,
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                child: Image.asset('${image[i]}'),
-              ),
-              //name of reviewer  and reviewer rated stars
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // name of reviewer
-                  Text(
-                    "Jennifer Rose",
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontFamily: FontConstants.fontFamily,
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeightManager.bold),
-                  ),
-                  SizedBox(
-                    height: 3,
-                  ),
-                  // reviewer rated stars
-                  Row(
-                    children: [
-                      for (int i = 0; i < 5; i++) drawIcons(15),
-                    ],
-                  ),
-                ],
-              ),
-              Spacer(),
-              Text(
-                "5 min",
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.shadow,
-                  fontFamily: FontConstants.fontFamily,
-                ),
-              ),
-            ],
-          ),
-          Text(
-            "I love it."
-            " Awesome customer service!! Helped me out "
-            "with adding an"
-            "additional item to my order."
-            "Thanks again!",
-            style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontFamily: FontConstants.fontFamily,
-                fontSize: 12),
-          )
-        ],
-      ),
-    );
-  }
 
   List<String> getImagesList() {
     if (_selectedColor == 0) {
@@ -233,6 +127,176 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white70,
+      body: CustomScrollView(
+        slivers: [
+          //Screen AppBar
+          sliverAppbar(
+            isFavourite: isFavourite,
+            onBack: () => Navigator.pop(context),
+            onFavouriteToggle: () {
+              setState(() {
+                isFavourite = !isFavourite;
+              });
+              print("favvvvvvvvvvvvvvvvvvvv");
+            },
+          ),
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                //Product Image Slider
+                imageSlider(
+                  imagePaths: getImagesList(),
+                ),
+
+                // product details
+                Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(25),
+                          topRight: Radius.circular(25)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).colorScheme.shadow,
+                          spreadRadius: 2,
+                          blurRadius: 8,
+                          offset: Offset(2, 4),
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(AppPadding.p18),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            height: 20,
+                          ),
+                          // product name and  product price
+                          Product_Name_Price(
+                            productID: widget.productId,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          // starts rating
+                          starsRating(rate: rate, numOfRatings: numOfRatings),
+
+                          SizedBox(
+                            height: 15,
+                          ),
+                          // normal line
+                          Divider(thickness: 0.1, height: 0.5),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          // colors and sizes of product
+                          product_color_size(
+                              currentImage: _currentImage,
+                              currentColor: _currentColor,
+                              CurrentSize: _CurrentSize,
+                              selectedColor: _selectedColor,
+                              selectedSize: _selectedSize,
+                              clrs: clrs,
+                              txt: txt),
+
+                          SizedBox(
+                            height: 10,
+                          ),
+                          // normal line
+                          Divider(
+                            thickness: .1,
+                            height: 0.5,
+                          ),
+                          // product discription
+                          Productdiscription(
+                            productID: widget.productId,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          // normal line
+                          Divider(
+                            thickness: .1,
+                            height: 0.5,
+                          ),
+                          //Reviews
+                          Productreviews(
+                              numOfRatings: numOfRatings,
+                              ratingNumber: ratingNumber,
+                              numOfReviews: numOfReviews,
+                              nums: nums,
+                              percentages: percentages),
+
+                          SizedBox(
+                            height: 5,
+                          ),
+                          // normal line
+                          Divider(
+                            thickness: 0.1,
+                            height: 0.5,
+                          ),
+                          // Simial Products
+                          simialProducts(
+                              productNames: productNames,
+                              similarProductPrices: similarProductPrices),
+                        ],
+                      ),
+                    )
+                    ////////////////////////////////////////////////////////////////////////
+
+                    ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Container(
+        width: double.infinity,
+        height: 60,
+        // margin: const EdgeInsets.symmetric(horizontal: 10),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.onSurface,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+            ),
+          ),
+          onPressed: () {
+            print("Button Pressed");
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.shopping_bag,
+                color: Theme.of(context).colorScheme.onPrimary,
+                size: 25,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                "Add to Cart",
+                style: TextStyle(
+                    fontSize: 18,
+                    fontFamily: FontConstants.fontFamily,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+/**    
+       
       body: SingleChildScrollView(
         padding: EdgeInsets.only(bottom: 40),
         child: Column(
@@ -909,45 +973,5 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Container(
-        width: double.infinity,
-        height: 60,
-        // margin: const EdgeInsets.symmetric(horizontal: 10),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.onSurface,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(24), topRight: Radius.circular(24)),
-            ),
-          ),
-          onPressed: () {
-            print("Button Pressed");
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.shopping_bag,
-                color: Theme.of(context).colorScheme.onPrimary,
-                size: 25,
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(
-                "Add to Cart",
-                style: TextStyle(
-                    fontSize: 18,
-                    fontFamily: FontConstants.fontFamily,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+       
+ */
