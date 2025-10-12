@@ -29,7 +29,7 @@ class DeleteProduct extends ProductEvent {
 }
 
 class AdminEditProduct extends ProductEvent {
-  final int ProductID;
+  final String ProductID;
   final String? ProductName;
   final String? ProductDescription;
   final String? ProductCategotry;

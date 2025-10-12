@@ -56,15 +56,15 @@ class Product {
   }
 }
 
-class ProductsLoaded extends ProductState {
-  final List<Product> products;
-  ProductsLoaded({required this.products}) : super(product: []);
-}
+// class ProductsLoaded extends ProductState {
+//   final List<Product> products;
+//   ProductsLoaded({required this.products}) : super(product: []);
+// }
 
-class ProductLoaded extends ProductState {
-  final Product prod;
-  ProductLoaded({required this.prod}) : super(product: []);
-}
+// class ProductLoaded extends ProductState {
+//   final Product prod;
+//   ProductLoaded({required this.prod}) : super(product: []);
+// }
 
 class ProductState {
   final List<Product> product;

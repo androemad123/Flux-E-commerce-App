@@ -4,7 +4,6 @@ import 'package:depi_graduation/cubit/auth/auth_cubit.dart';
 import 'package:depi_graduation/presentation/auth/login/login_view.dart';
 import 'package:depi_graduation/presentation/auth/register/register_view.dart';
 import 'package:depi_graduation/presentation/home/base_home_screen.dart';
-import 'package:depi_graduation/presentation/my%20orders/my_orders_screen.dart';
 import 'package:depi_graduation/presentation/onboarding/welcome_screen.dart';
 import 'package:depi_graduation/routing/routes.dart';
 import 'package:flutter/material.dart';
@@ -33,14 +32,13 @@ class AppRouter {
       case Routes.homeRoute:
         return MaterialPageRoute(builder: (_) => BaseHomeScreen());
       case Routes.productDetailsRoute:
+        final args = settings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
             builder: (_) => ProductDetailsScreen(
-                  productId: "", //
+                  productId: args?['productId'] ?? '', //
                 ));
       case Routes.welcomeScreen:
         return MaterialPageRoute(builder: (_) => WelcomeScreen());
-      case Routes.ordersScreen:
-        return MaterialPageRoute(builder: (_) => MyOrdersScreen());
 
       default:
         return unDefinedRoute();
