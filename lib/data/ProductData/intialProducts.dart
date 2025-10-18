@@ -12,7 +12,7 @@ List<Product> initialProducts = [
     ProductDescription:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus consequat, orci nec faucibus dapibus, ipsum augue placerat ante, at iaculis lectus arcu quis risus. Ut posuere felis in pretium consectetur.",
     ProductCategotry: "Women",
-    ProductColors: [Colors.red, Colors.blue, Colors.brown],
+    ProductColors: [ Color(0xFFF44336), Colors.blue, Colors.brown],
     ProductSizes: ["L", "M", "S"],
     ProductPrice: 15500.00,
     ProductImageURL: "assets/images/3rdOnboardingPic.jpg",

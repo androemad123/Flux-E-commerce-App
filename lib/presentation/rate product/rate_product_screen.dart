@@ -142,14 +142,16 @@ class _RateProductScreenState extends State<RateProductScreen> {
   }
 
   Widget _buildUploadBox(IconData icon, String label) {
-    return DottedBorder(
-      options: RoundedRectDottedBorderOptions(radius: Radius.circular(12),
-        color: Colors.black12,
-        dashPattern: [10, 5],
-        strokeWidth: 2,
-        padding: EdgeInsets.all(16),
-      ),
-      child: Icon(icon, color: Colors.black12, size: 28.sp),
-    );
+   return DottedBorder(
+    borderType: BorderType.RRect,
+    radius: Radius.circular(12),
+    dashPattern: [10, 5],
+    color: Colors.black12,
+    strokeWidth: 2,
+    padding: EdgeInsets.all(16),
+    child: Icon(icon, color: Colors.black12, size: 28.sp),
+  );
   }
 }
+
+

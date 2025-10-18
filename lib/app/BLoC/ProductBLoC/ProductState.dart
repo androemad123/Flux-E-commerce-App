@@ -5,7 +5,7 @@ class Product {
   String ProductName;
   String ProductDescription;
   String ProductCategotry;
-  List<MaterialColor> ProductColors;
+  List<Color> ProductColors;
   List<String> ProductSizes;
   double ProductPrice;
   String ProductImageURL;
@@ -30,7 +30,7 @@ class Product {
       'ProductName': ProductName,
       'ProductDescription': ProductDescription,
       'ProductCategotry': ProductCategotry,
-      'ProductColors': ProductColors,
+      'ProductColors': ProductColors.map((color) => color.value).toList(),
       'ProductSizes': ProductSizes,
       'ProductPrice': ProductPrice,
       'ProductImageURL': ProductImageURL,
@@ -46,7 +46,9 @@ class Product {
       ProductDescription:
           json['ProductDescription'] ?? 'No Product description',
       ProductCategotry: json['ProductCategotry'] ?? 'No Product category',
-      ProductColors: json['ProductColors'] ?? [],
+      ProductColors: (json['ProductColors'] as List)
+          .map((colorValue) => Color(colorValue as int))
+          .toList(),
       ProductSizes: json['ProductSizes'] ?? [],
       ProductPrice: json['ProductPrice'] ?? 0.00,
       ProductImageURL: json['ProductImageURL'] ?? '',

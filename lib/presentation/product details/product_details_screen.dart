@@ -123,6 +123,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     "assets/images/3rdOnboardingPic.jpg",
   ];
 
+ 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,6 +144,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
           SliverToBoxAdapter(
             child: Column(
+                mainAxisSize: MainAxisSize.min, 
               children: [
                 //Product Image Slider
                 imageSlider(
