@@ -2,7 +2,7 @@ import 'package:depi_graduation/presentation/rate%20product/rate_product_screen.
 import 'package:depi_graduation/presentation/widgets/app_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:depi_graduation/data/models/order_details.dart';
-import 'package:depi_graduation/data/models/product.dart';
+import 'package:depi_graduation/data/models/ProductModel.dart';
 import 'package:depi_graduation/data/models/order_status.dart';
 import 'package:depi_graduation/presentation/resources/color_manager.dart';
 import 'package:depi_graduation/presentation/resources/styles_manager.dart';

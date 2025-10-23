@@ -1,32 +1,54 @@
 import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductEvent.dart';
 import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductState.dart';
-import 'package:depi_graduation/data/ProductData/JsonProductData.dart';
+import 'package:depi_graduation/data/models/ProductModel.dart';
+import 'package:depi_graduation/firebase_services/firestore_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 
 var uuid = Uuid();
 
 class ProductBLoC extends Bloc<ProductEvent, ProductState> {
-  ProductBLoC() : super(ProductState(product: [])) {
+  final firestore = FirestoreService<Product>(
+      collection: "products",
+      fromJson: (json) => Product.fromJson(json),
+      toJson: (product) => product.tojson());
+
+  ProductBLoC() : super(initialState(products: [])) {
     on<LoadAllProducts>(
       (event, emit) async {
-        final products = await loadAllProducts();
-        emit(ProductState(product: products));
+        emit(ProductLoading());
+        List<Product?> products = await firestore.getAll();
+        if (products.isEmpty) {
+          emit(ErrorState(errorMSG: "Products Not Found"));
+        } else {
+          emit(AllProductsLoaded(products: products));
+        }
       },
     );
 
     on<LoadProduct>(
       (event, emit) async {
-        Product x = await loadProduct(event.ProductID);
-        List<Product> ReturnedProduct = [x];
-        emit(ProductState(product: ReturnedProduct));
+        emit(ProductLoading());
+        Product? product = await firestore.get(event.ProductID);
+        if (product == null)
+          emit(ErrorState(errorMSG: "Product Not Found"));
+        else {
+          emit(ProductLoaded(product: product));
+        }
       },
     );
 
-    on<LoadCategoryProduct>(
+    on<LoadSpecificProduct>(
       (event, emit) async {
-        List<Product> x = await loadCategoryProduct(event.ProductCategotry);
-        emit(ProductState(product: x));
+        emit(ProductLoading());
+
+        List<Product?> products =
+            await firestore.getWhere(event.field, event.isEqualTo);
+        if (products.isEmpty) {
+          emit(ErrorState(errorMSG: "Products Not Found"));
+        } else {
+          emit(SpecificProducts(products: products));
+        }
       },
     );
 

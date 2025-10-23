@@ -1,78 +1,52 @@
-import 'package:flutter/material.dart';
+import 'package:depi_graduation/data/models/ProductModel.dart';
+import 'package:equatable/equatable.dart';
 
-class Product {
-  String ProductID;
-  String ProductName;
-  String ProductDescription;
-  String ProductCategotry;
-  List<Color> ProductColors;
-  List<String> ProductSizes;
-  double ProductPrice;
-  String ProductImageURL;
-  int ProductQuantity;
-  bool isProductBuyed;
 
-  Product(
-      {required this.ProductID,
-      required this.ProductName,
-      required this.ProductDescription,
-      required this.ProductCategotry,
-      required this.ProductColors,
-      required this.ProductSizes,
-      required this.ProductPrice,
-      required this.ProductImageURL,
-      required this.ProductQuantity,
-      required this.isProductBuyed});
-
-  Map<String, dynamic> tojson() {
-    return {
-      'ProductID': ProductID,
-      'ProductName': ProductName,
-      'ProductDescription': ProductDescription,
-      'ProductCategotry': ProductCategotry,
-      'ProductColors': ProductColors.map((color) => color.value).toList(),
-      'ProductSizes': ProductSizes,
-      'ProductPrice': ProductPrice,
-      'ProductImageURL': ProductImageURL,
-      'ProductQuantity': ProductQuantity,
-      'isProductBuyed': isProductBuyed,
-    };
-  }
-
-  factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
-      ProductID: json['ProductID'] ?? "",
-      ProductName: json['ProductName'] ?? 'No Product Name',
-      ProductDescription:
-          json['ProductDescription'] ?? 'No Product description',
-      ProductCategotry: json['ProductCategotry'] ?? 'No Product category',
-      ProductColors: (json['ProductColors'] as List)
-          .map((colorValue) => Color(colorValue as int))
-          .toList(),
-      ProductSizes: json['ProductSizes'] ?? [],
-      ProductPrice: json['ProductPrice'] ?? 0.00,
-      ProductImageURL: json['ProductImageURL'] ?? '',
-      ProductQuantity: json['ProductQuantity'] ?? 0,
-      isProductBuyed: json['isProductBuyed'] ?? false,
-    );
-  }
+abstract class ProductState extends Equatable {
+  @override
+  List<Object?> get props => [];
 }
 
-// class ProductsLoaded extends ProductState {
-//   final List<Product> products;
-//   ProductsLoaded({required this.products}) : super(product: []);
-// }
+class initialState extends ProductState {
+  final List<Product> products;
+  initialState({required this.products});
 
-// class ProductLoaded extends ProductState {
-//   final Product prod;
-//   ProductLoaded({required this.prod}) : super(product: []);
-// }
+  @override
+  List<Object?> get props => [products];
+}
 
-class ProductState {
-  final List<Product> product;
-  ProductState({required this.product});
+class ProductLoading extends ProductState {}
 
-  ProductState copyWith({List<Product>? product}) {
-    return ProductState(product: product ?? this.product);
-  }
+class AllProductsLoaded extends ProductState {
+  final List<Product?> products;
+  AllProductsLoaded({required this.products});
+
+  @override
+  List<Object?> get props => [products];
+}
+
+class SpecificProducts extends ProductState{
+   final List<Product?> products;
+  SpecificProducts({required this.products});
+
+  @override
+  List<Object?> get props => [products];
+
+}
+
+class ProductLoaded extends ProductState {
+  final Product product;
+  ProductLoaded({required this.product});
+
+  @override
+  List<Object?> get props => [product];
+}
+
+class ErrorState extends ProductState {
+  final String errorMSG;
+  ErrorState({required this.errorMSG});
+
+   @override
+  List<Object?> get props => [errorMSG];
+
 }

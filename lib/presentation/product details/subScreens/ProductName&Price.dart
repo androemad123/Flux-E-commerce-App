@@ -1,6 +1,6 @@
 import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductBLoC.dart';
-import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductEvent.dart';
 import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductState.dart';
+import 'package:depi_graduation/data/models/ProductModel.dart';
 import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,41 +19,41 @@ class Product_Name_Price extends StatefulWidget {
 
 class _Product_Name_PriceState extends State<Product_Name_Price> {
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    context.read<ProductBLoC>().add(LoadProduct(ProductID: widget.productID));
-  }
-
-  @override
   Widget build(BuildContext context) {
-    // context.read<ProductBLoC>().add(LoadProduct(ProductID: widget.productID));
-
     return BlocBuilder<ProductBLoC, ProductState>(
       builder: (context, state) {
-        if (state.product.isEmpty) {
+        if (state is ProductLoading) {
           return const Center(child: CircularProgressIndicator());
-        }
-        return Row(
-          children: [
-            // product name
-            Text(
-              state.product[0].ProductName,
-              style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: FontConstants.fontFamily),
-            ),
-            Spacer(),
-            // product price
-            Text(" \$ ${state.product[0].ProductPrice}",
+        } else if (state is ProductLoaded) {
+          Product product = state.product;
+          return Row(
+            children: [
+              // product name
+              Text(
+                product.ProductName,
                 style: TextStyle(
                     color: Theme.of(context).primaryColor,
-                    fontSize: 26,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    fontFamily: FontConstants.fontFamily))
-          ],
-        );
+                    fontFamily: FontConstants.fontFamily),
+              ),
+              Spacer(),
+              // product price
+              Text(" \$ ${product.ProductPrice}",
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: FontConstants.fontFamily))
+            ],
+          );
+        } else {
+          return Center(
+              child: Text(
+            "Something went wrong!!",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ));
+        }
       },
     );
   }

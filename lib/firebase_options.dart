@@ -41,52 +41,52 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyD3sBKLoENseCGU3WVBkbILPaCVNFr5zGI',
-    appId: '1:1091133489164:web:8ba743d917de86ba946e29',
-    messagingSenderId: '1091133489164',
-    projectId: 'socialfeedapp-77759',
-    authDomain: 'socialfeedapp-77759.firebaseapp.com',
-    storageBucket: 'socialfeedapp-77759.firebasestorage.app',
-    measurementId: 'G-EN1BB9ZM46',
+    apiKey: 'AIzaSyDUujA2eLaWExC9nQNJe2R9QrNINP8Nnyo',
+    appId: '1:424148418575:web:2bfef60f0b90e151a4e37a',
+    messagingSenderId: '424148418575',
+    projectId: 'flux-e-commerce-app',
+    authDomain: 'flux-e-commerce-app.firebaseapp.com',
+    storageBucket: 'flux-e-commerce-app.firebasestorage.app',
+    measurementId: 'G-21CWTVCB0E',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAcNdpYdUXfc5pHGnwC2gfooLMFSll-S4Q',
-    appId: '1:1091133489164:android:9e135038b48eb8f1946e29',
-    messagingSenderId: '1091133489164',
-    projectId: 'socialfeedapp-77759',
-    storageBucket: 'socialfeedapp-77759.firebasestorage.app',
+    apiKey: 'AIzaSyBLVhIpMQ12qIfEkMUy-OxHB4fKWlxZkhA',
+    appId: '1:424148418575:android:18271b2f125740efa4e37a',
+    messagingSenderId: '424148418575',
+    projectId: 'flux-e-commerce-app',
+    storageBucket: 'flux-e-commerce-app.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCfTMNrqnj-5HGGGv92SQog8XFLz_V02Io',
-    appId: '1:1091133489164:ios:1a09ce572c4fe304946e29',
-    messagingSenderId: '1091133489164',
-    projectId: 'socialfeedapp-77759',
-    storageBucket: 'socialfeedapp-77759.firebasestorage.app',
-    androidClientId: '1091133489164-lv02vqemarqf06afivpqlu4vl21klqtk.apps.googleusercontent.com',
-    iosClientId: '1091133489164-o0ddqf30r9pgif0l3v52h2bai2e2teuu.apps.googleusercontent.com',
+    apiKey: 'AIzaSyCigyULD4OJV5YFXE9A4IWWgWNF1PqDE4o',
+    appId: '1:424148418575:ios:f1a6adc739853e7da4e37a',
+    messagingSenderId: '424148418575',
+    projectId: 'flux-e-commerce-app',
+    storageBucket: 'flux-e-commerce-app.firebasestorage.app',
+    androidClientId: '424148418575-ol1kdcnsbksavs8fslm4fom7cvgtjviu.apps.googleusercontent.com',
+    iosClientId: '424148418575-j175f7n8saflnfs4r2g00mi1nfvak8o7.apps.googleusercontent.com',
     iosBundleId: 'com.example.depiGraduation',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCfTMNrqnj-5HGGGv92SQog8XFLz_V02Io',
-    appId: '1:1091133489164:ios:1a09ce572c4fe304946e29',
-    messagingSenderId: '1091133489164',
-    projectId: 'socialfeedapp-77759',
-    storageBucket: 'socialfeedapp-77759.firebasestorage.app',
-    androidClientId: '1091133489164-lv02vqemarqf06afivpqlu4vl21klqtk.apps.googleusercontent.com',
-    iosClientId: '1091133489164-o0ddqf30r9pgif0l3v52h2bai2e2teuu.apps.googleusercontent.com',
+    apiKey: 'AIzaSyCigyULD4OJV5YFXE9A4IWWgWNF1PqDE4o',
+    appId: '1:424148418575:ios:f1a6adc739853e7da4e37a',
+    messagingSenderId: '424148418575',
+    projectId: 'flux-e-commerce-app',
+    storageBucket: 'flux-e-commerce-app.firebasestorage.app',
+    androidClientId: '424148418575-ol1kdcnsbksavs8fslm4fom7cvgtjviu.apps.googleusercontent.com',
+    iosClientId: '424148418575-j175f7n8saflnfs4r2g00mi1nfvak8o7.apps.googleusercontent.com',
     iosBundleId: 'com.example.depiGraduation',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyD3sBKLoENseCGU3WVBkbILPaCVNFr5zGI',
-    appId: '1:1091133489164:web:b0ac0d67232f6162946e29',
-    messagingSenderId: '1091133489164',
-    projectId: 'socialfeedapp-77759',
-    authDomain: 'socialfeedapp-77759.firebaseapp.com',
-    storageBucket: 'socialfeedapp-77759.firebasestorage.app',
-    measurementId: 'G-K6VYVVKG8Y',
+    apiKey: 'AIzaSyDUujA2eLaWExC9nQNJe2R9QrNINP8Nnyo',
+    appId: '1:424148418575:web:bd841f3aa5ff34f1a4e37a',
+    messagingSenderId: '424148418575',
+    projectId: 'flux-e-commerce-app',
+    authDomain: 'flux-e-commerce-app.firebaseapp.com',
+    storageBucket: 'flux-e-commerce-app.firebasestorage.app',
+    measurementId: 'G-VCB0G83FH6',
   );
 }

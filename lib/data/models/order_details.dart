@@ -1,4 +1,4 @@
-import 'package:depi_graduation/data/models/product.dart';
+import 'package:depi_graduation/data/models/ProductModel.dart';
 
 import 'order_status.dart';
 
@@ -49,7 +49,7 @@ class OrderDetails {
       'quantity': quantity,
       'total': total,
       'address': address,
-      'products': products.map((p) => p.toJson()).toList(),
+      'products': products.map((p) => p.tojson()).toList(),
     };
   }
   //testing orders only
@@ -64,12 +64,12 @@ class OrderDetails {
       address: "123 Main Street, Cairo, Egypt",
       products: [
         Product(
-          id: "P001",
-          name: "Wireless Mouse",
-          description: "Ergonomic wireless mouse with USB receiver",
-          quantity: 1,
-          price: 19.99,
-          imageUrl: "https://example.com/mouse.jpg",
+          ProductID: "P001",
+          ProductName: "Wireless Mouse",
+          ProductDescription: "Ergonomic wireless mouse with USB receiver",
+          ProductQuantity: 1,
+          ProductPrice: 19.99,
+          ProductImageURL: "https://example.com/mouse.jpg",
         ),
         Product(
           id: "P002",

@@ -44,24 +44,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     "20.00"
   ];
 
-  List<String> getImagesList() {
-    if (_selectedColor == 0) {
-      if (_selectedSize == 0) return firstColor_Small;
-      if (_selectedSize == 1) return firstColor_Medium;
-      if (_selectedSize == 2) return firstColor_Large;
-    } else if (_selectedColor == 1) {
-      if (_selectedSize == 0) return secondColor_Small;
-      if (_selectedSize == 1) return secondColor_Medium;
-      if (_selectedSize == 2) return secondColor_Large;
-    } else if (_selectedColor == 2) {
-      if (_selectedSize == 0) return thirdColor_Small;
-      if (_selectedSize == 1) return thirdColor_Medium;
-      if (_selectedSize == 2) return thirdColor_Large;
-    }
-
-    return firstColor_Small;
-  }
-
   int numOfReviews = 47;
   int numOfRatings = 83;
   String productDescription = "Sportswear is no longer under culture, "
@@ -76,54 +58,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   int _selectedColor = 0;
   int _selectedSize = 0;
-
-  final List<String> firstColor_Small = [
-    "assets/images/1stOnboardingPic.jpg",
-    "assets/images/2ndOnboardingPic.jpg",
-    "assets/images/3rdOnboardingPic.jpg",
-  ];
-  final List<String> firstColor_Medium = [
-    "assets/images/3rdOnboardingPic.jpg",
-    "assets/images/iconDark.png",
-    "assets/images/iconDark.png",
-  ];
-  final List<String> firstColor_Large = [
-    "assets/images/1stOnboardingPic.jpg",
-    "assets/images/iconlight.png",
-    "assets/images/iconlight.png",
-  ];
-  final List<String> secondColor_Small = [
-    "assets/images/1stOnboardingPic.jpg",
-    "assets/images/2ndOnboardingPic.jpg",
-    "assets/images/3rdOnboardingPic.jpg",
-  ];
-  final List<String> secondColor_Medium = [
-    "assets/images/1stOnboardingPic.jpg",
-    "assets/images/2ndOnboardingPic.jpg",
-    "assets/images/3rdOnboardingPic.jpg",
-  ];
-  final List<String> secondColor_Large = [
-    "assets/images/1stOnboardingPic.jpg",
-    "assets/images/2ndOnboardingPic.jpg",
-    "assets/images/3rdOnboardingPic.jpg",
-  ];
-  final List<String> thirdColor_Small = [
-    "assets/images/1stOnboardingPic.jpg",
-    "assets/images/2ndOnboardingPic.jpg",
-    "assets/images/3rdOnboardingPic.jpg",
-  ];
-  final List<String> thirdColor_Medium = [
-    "assets/images/1stOnboardingPic.jpg",
-    "assets/images/2ndOnboardingPic.jpg",
-    "assets/images/3rdOnboardingPic.jpg",
-  ];
-  final List<String> thirdColor_Large = [
-    "assets/images/1stOnboardingPic.jpg",
-    "assets/images/2ndOnboardingPic.jpg",
-    "assets/images/3rdOnboardingPic.jpg",
-  ];
-
- 
 
   @override
   Widget build(BuildContext context) {
@@ -144,11 +78,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
           SliverToBoxAdapter(
             child: Column(
-                mainAxisSize: MainAxisSize.min, 
+              mainAxisSize: MainAxisSize.min,
               children: [
                 //Product Image Slider
                 imageSlider(
-                  imagePaths: getImagesList(),
+                  productID: widget.productId,
                 ),
 
                 // product details
