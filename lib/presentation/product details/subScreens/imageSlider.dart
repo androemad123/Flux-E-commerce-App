@@ -22,7 +22,7 @@ class _imageSliderState extends State<imageSlider> {
 
   @override
   Widget build(BuildContext context) {
-    context.read<ProductBLoC>().add(LoadProduct(ProductID: widget.productID));
+   
     return BlocBuilder<ProductBLoC, ProductState>(
       builder: (context, state) {
         if (state is ProductLoading) {

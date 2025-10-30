@@ -1,5 +1,5 @@
 class Feedback {
-  String FeedbackID;
+  String FeedbackID; //unique
   String ProductID;
   String UserID;
   int rating;
@@ -15,6 +15,7 @@ class Feedback {
 
   Map<String, dynamic> tojson() {
     return {
+      'FeedbackID': FeedbackID,
       'ProductID': ProductID,
       'UserID': UserID,
       'rating': rating,
@@ -24,7 +25,7 @@ class Feedback {
 
   factory Feedback.fromJson(Map<String, dynamic> json) {
     return Feedback(
-      FeedbackID: json['FeedbackID']??  "No Feedback ID",
+      FeedbackID: json['FeedbackID'] ?? "No Feedback ID",
       ProductID: json['ProductID'] ?? "No Product ID",
       UserID: json['UserID'] ?? 'No User Name',
       rating: json['rating'] ?? 0,

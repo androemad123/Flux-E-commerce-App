@@ -7,7 +7,7 @@ abstract class FeedbackState extends Equatable {
 }
 
 class initialState extends FeedbackState {
-  final List<Feedback> Feedbacks;
+  final List<Feedback?> Feedbacks;
   initialState({required this.Feedbacks});
 
   @override
@@ -37,7 +37,7 @@ class FeedbackLoaded extends FeedbackState {
   FeedbackLoaded({required this.feedback});
 
   @override
-  List<Object?> get props => [Feedback];
+  List<Object?> get props => [feedback];
 }
 
 class ErrorState extends FeedbackState {
@@ -48,15 +48,14 @@ class ErrorState extends FeedbackState {
   List<Object?> get props => [errorMSG];
 }
 
-class FeedbackAdded extends FeedbackState{
+class FeedbackAdded extends FeedbackState {
   final String feedbackID;
   FeedbackAdded({required this.feedbackID});
 
   @override
   List<Object?> get props => [feedbackID];
-
 }
 
-class FeedbackUpdated extends FeedbackState{}
+class FeedbackUpdated extends FeedbackState {}
 
-class FeedbackDeleted extends FeedbackState{}
+class FeedbackDeleted extends FeedbackState {}

@@ -1,3 +1,5 @@
+import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductBLoC.dart';
+import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductEvent.dart';
 import 'package:depi_graduation/presentation/product%20details/subScreens/ProductName&Price.dart';
 import 'package:depi_graduation/presentation/product%20details/subScreens/imageSlider.dart';
 import 'package:depi_graduation/presentation/product%20details/subScreens/productDetailsAppBar.dart';
@@ -9,6 +11,7 @@ import 'package:depi_graduation/presentation/product%20details/subScreens/starsR
 import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:depi_graduation/presentation/resources/value_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final String productId;
@@ -59,8 +62,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   int _selectedColor = 0;
   int _selectedSize = 0;
 
+   @override
+  void initState() {
+    super.initState();
+    context.read<ProductBLoC>().add(LoadProduct(ProductID: widget.productId));
+  }
+
   @override
   Widget build(BuildContext context) {
+     context.read<ProductBLoC>().add(LoadProduct(ProductID: widget.productId));
     return Scaffold(
       backgroundColor: Colors.white70,
       body: CustomScrollView(
@@ -118,7 +128,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ),
                           // starts rating
                           starsRating(rate: rate, numOfRatings: numOfRatings),
-
                           SizedBox(
                             height: 15,
                           ),

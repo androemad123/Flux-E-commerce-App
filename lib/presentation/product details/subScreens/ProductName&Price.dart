@@ -25,12 +25,12 @@ class _Product_Name_PriceState extends State<Product_Name_Price> {
         if (state is ProductLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is ProductLoaded) {
-          Product product = state.product;
+          Product prod = state.product;
           return Row(
             children: [
               // product name
               Text(
-                product.ProductName,
+                prod.ProductName,
                 style: TextStyle(
                     color: Theme.of(context).primaryColor,
                     fontSize: 18,
@@ -39,7 +39,7 @@ class _Product_Name_PriceState extends State<Product_Name_Price> {
               ),
               Spacer(),
               // product price
-              Text(" \$ ${product.ProductPrice}",
+              Text(" \$ ${prod.ProductPrice}",
                   style: TextStyle(
                       color: Theme.of(context).primaryColor,
                       fontSize: 26,

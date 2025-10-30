@@ -111,7 +111,7 @@ class FirestoreService<T> {
   Future<void> uploadImageToFirestore() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    Future<List<T?>> doc = getAll("products");
+    Future<List<T?>> doc = getAll();
 
     if (image != null) {
       // قراءة الصورة كـ bytes

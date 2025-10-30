@@ -1,3 +1,4 @@
+import 'package:depi_graduation/app/BLoC/FeedbackBLoC/FeedbackBLoC.dart';
 import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductBLoC.dart';
 import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductEvent.dart';
 import 'package:depi_graduation/core/di/setup_service_locator.dart';
@@ -32,6 +33,9 @@ void main() async {
         providers: [
           BlocProvider<ProductBLoC>(
             create: (_) => ProductBLoC()..add(LoadAllProducts()),
+          ),
+          BlocProvider<FeedbackBLoC>(
+            create: (_) => FeedbackBLoC()
           ),
         ],
         child: FluxApp(appRouter: AppRouter()),

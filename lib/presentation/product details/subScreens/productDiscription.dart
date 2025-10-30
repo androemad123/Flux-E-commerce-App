@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Productdiscription extends StatefulWidget {
-  String productID;
+ final String productID;
 
   Productdiscription({super.key, required this.productID});
 

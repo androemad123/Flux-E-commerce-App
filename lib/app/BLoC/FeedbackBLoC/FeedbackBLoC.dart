@@ -56,11 +56,11 @@ class FeedbackBLoC extends Bloc<FeedbackEvent, FeedbackState> {
     on<AddFeedback>(
       (event, emit) async {
         emit(FeedbackLoading());
-        final feedbackID = const Uuid().v4();
+        // final feedbackID = const Uuid().v4();
         final userID = FirebaseAuth.instance.currentUser!.uid;
 
         final feedback = Feedback(
-            FeedbackID: feedbackID,
+            // FeedbackID: feedbackID,
             ProductID: event.productID,
             UserID: userID,
             rating: event.rating,
@@ -68,7 +68,7 @@ class FeedbackBLoC extends Bloc<FeedbackEvent, FeedbackState> {
 
         try {
           String docID = await firestore.create(feedback);
-          emit(FeedbackAdded(feedbackID: docID));
+          emit(FeedbackAdded(docID: docID));
         } catch (e) {
           emit(ErrorState(errorMSG: "${e.toString()}"));
         }
@@ -79,17 +79,22 @@ class FeedbackBLoC extends Bloc<FeedbackEvent, FeedbackState> {
       (event, emit) async {
         emit(FeedbackLoading());
         final userID = FirebaseAuth.instance.currentUser!.uid;
-        final updatedFeedback = Feedback(
-            FeedbackID: event.FeedbackID,
-            ProductID: event.ProductID,
-            UserID: userID,
-            rating: event.rating,
-            review: event.review);
-        try {
-          await firestore.update(event.FeedbackID, updatedFeedback);
-          emit(FeedbackUpdated());
-        } catch (e) {
-          emit(ErrorState(errorMSG: e.toString()));
+        Feedback? fdbk = await firestore.get(event.docID);
+        if (fdbk!.UserID == userID) {
+          final updatedFeedback = Feedback(
+              //  FeedbackID: event.FeedbackID,
+              ProductID: event.ProductID,
+              UserID: userID,
+              rating: event.rating,
+              review: event.review);
+          try {
+            await firestore.update(event.docID, updatedFeedback);
+            emit(FeedbackUpdated());
+          } catch (e) {
+            emit(ErrorState(errorMSG: e.toString()));
+          }
+        } else {
+          emit(ErrorState(errorMSG: "$userID   -   ${fdbk.UserID}"));
         }
       },
     );
@@ -98,7 +103,7 @@ class FeedbackBLoC extends Bloc<FeedbackEvent, FeedbackState> {
       (event, emit) async {
         emit(FeedbackLoading());
         try {
-          await firestore.delete(event.FeedbackID);
+          await firestore.delete(event.docID);
           emit(FeedbackDeleted());
         } catch (e) {
           emit(ErrorState(errorMSG: e.toString()));

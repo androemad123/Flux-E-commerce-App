@@ -14,6 +14,16 @@ class LoadProduct extends ProductEvent {
   List<Object?> get props => [ProductID];
 }
 
+class LoadSpecificProduct extends ProductEvent {
+  final String field;
+  final dynamic isEqualTo;
+  LoadSpecificProduct({required this.field, required this.isEqualTo});
+
+  @override
+  List<Object?> get props => [field, isEqualTo];
+}
+
+////////////////////////////////
 class AddProduct extends ProductEvent {
   final String ProductName;
   final String ProductDescription;
@@ -71,14 +81,4 @@ class AdminEditProduct extends ProductEvent {
         ProductImageURL,
         ProductQuantity
       ];
-}
-
-class LoadSpecificProduct extends ProductEvent {
-  final String field;
-  final dynamic isEqualTo;
-  LoadSpecificProduct({required this.field, required this.isEqualTo});
-
-  @override
-  List<Object?> get props => [field , isEqualTo];
-
 }

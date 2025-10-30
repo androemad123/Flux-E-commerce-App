@@ -1,5 +1,4 @@
 class Product {
-  
   String ProductID;
   String ProductName;
   String ProductDescription;
