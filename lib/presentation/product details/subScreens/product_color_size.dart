@@ -2,21 +2,10 @@ import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:flutter/material.dart';
 
 class product_color_size extends StatefulWidget {
-  int currentImage;
-  List<bool> currentColor;
-  List<bool> CurrentSize;
-
-  int selectedColor;
-  int selectedSize;
-  List<Color> clrs;
-  List<String> txt;
-  product_color_size(
+  final List<Color> clrs;
+  final List<String> txt;
+  const product_color_size(
       {super.key,
-      required this.currentImage,
-      required this.currentColor,
-      required this.CurrentSize,
-      required this.selectedColor,
-      required this.selectedSize,
       required this.clrs,
       required this.txt});
 
@@ -25,6 +14,19 @@ class product_color_size extends StatefulWidget {
 }
 
 class _product_color_sizeState extends State<product_color_size> {
+  int currentImage = 0;
+  late List<bool> currentColor;
+  late List<bool> currentSize;
+  int selectedColor = 0;
+  int selectedSize = 0;
+  
+  @override
+  void initState() {
+    super.initState();
+    currentColor = List.generate(widget.clrs.length, (index) => index == 0);
+    currentSize = List.generate(widget.txt.length, (index) => index == 0);
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -50,17 +52,17 @@ class _product_color_sizeState extends State<product_color_size> {
                 return IconButton.filled(
                   onPressed: () {
                     setState(() {
-                      if (widget.currentColor[index] == false) {
-                        for (int i = 0; i < widget.currentColor.length; i++) {
-                          widget.currentColor[i] = false;
+                      if (currentColor[index] == false) {
+                        for (int i = 0; i < currentColor.length; i++) {
+                          currentColor[i] = false;
                         }
-                        widget.currentColor[index] = true;
-                        widget.selectedColor = index;
-                        widget.currentImage = 0;
+                        currentColor[index] = true;
+                        selectedColor = index;
+                        currentImage = 0;
                       }
                     });
                   },
-                  iconSize: widget.currentColor[index] ? 40 : 35,
+                  iconSize: currentColor[index] ? 40 : 35,
                   padding: EdgeInsets.all(0),
                   constraints: BoxConstraints(),
                   icon: Icon(
@@ -68,7 +70,7 @@ class _product_color_sizeState extends State<product_color_size> {
                   ),
                   style: ButtonStyle(
                       backgroundColor: WidgetStateProperty.all(
-                          widget.currentColor[index]
+                          currentColor[index]
                               ? Theme.of(context).colorScheme.shadow
                               : Theme.of(context).scaffoldBackgroundColor)),
                   color: widget.clrs[index],
@@ -102,18 +104,18 @@ class _product_color_sizeState extends State<product_color_size> {
                   child: TextButton(
                     onPressed: () {
                       setState(() {
-                        if (widget.CurrentSize[index] == false) {
-                          for (int i = 0; i < widget.CurrentSize.length; i++) {
-                            widget.CurrentSize[i] = false;
+                        if (currentSize[index] == false) {
+                          for (int i = 0; i < currentSize.length; i++) {
+                            currentSize[i] = false;
                           }
-                          widget.CurrentSize[index] = true;
-                          widget.selectedSize = index;
-                          widget.currentImage = 0;
+                          currentSize[index] = true;
+                          selectedSize = index;
+                          currentImage = 0;
                         }
                       });
                     },
                     style: TextButton.styleFrom(
-                      backgroundColor: widget.CurrentSize[index]
+                      backgroundColor: currentSize[index]
                           ? Theme.of(context).colorScheme.onSurface
                           : Colors.transparent,
                       foregroundColor: Colors.transparent,
@@ -122,7 +124,7 @@ class _product_color_sizeState extends State<product_color_size> {
                       widget.txt[index],
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: widget.CurrentSize[index]
+                          color: currentSize[index]
                               ? Theme.of(context).scaffoldBackgroundColor
                               : Theme.of(context).primaryColor),
                     ),

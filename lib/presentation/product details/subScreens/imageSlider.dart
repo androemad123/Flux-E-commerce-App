@@ -1,6 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductBLoC.dart';
-import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductEvent.dart';
 import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductState.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,14 +21,22 @@ class _imageSliderState extends State<imageSlider> {
 
   @override
   Widget build(BuildContext context) {
-   
     return BlocBuilder<ProductBLoC, ProductState>(
       builder: (context, state) {
         if (state is ProductLoading) {
-          return CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         } else if (state is ProductLoaded) {
           List<String> images = state.product.ProductImageURL;
+
+          if (images.isEmpty) {
+            return const SizedBox(
+              height: 350,
+              child: Center(child: Text("No images available")),
+            );
+          }
+
           return SizedBox(
+            height: 350,
             child: Stack(
               children: [
                 Align(
@@ -44,8 +51,25 @@ class _imageSliderState extends State<imageSlider> {
 
                       CarouselSlider(
                         items: images
-                            .map((imgPath) =>
-                                Image.asset(imgPath, fit: BoxFit.cover))
+                            .map(
+                              (imgUrl) => ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.network(
+                              imgUrl,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              loadingBuilder: (context, child, loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Center(
+                                    child: Icon(Icons.broken_image, size: 50));
+                              },
+                            ),
+                          ),
+                        )
                             .toList(),
                         options: CarouselOptions(
                           height: 350,
@@ -59,7 +83,7 @@ class _imageSliderState extends State<imageSlider> {
                         ),
                       ),
 
-                      // (Indicators)
+                      // Indicators
                       Positioned(
                         top: 320,
                         child: Row(
@@ -74,6 +98,7 @@ class _imageSliderState extends State<imageSlider> {
                                 },
                                 child: Container(
                                   width: 18,
+                                  margin: const EdgeInsets.symmetric(horizontal: 3),
                                   child: Icon(
                                     _currentImage == i
                                         ? Icons.circle
@@ -92,11 +117,11 @@ class _imageSliderState extends State<imageSlider> {
             ),
           );
         } else {
-          return Center(
+          return const Center(
               child: Text(
-            "Something went wrong!!",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ));
+                "Something went wrong!!",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ));
         }
       },
     );

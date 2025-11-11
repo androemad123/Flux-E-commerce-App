@@ -26,17 +26,16 @@ class AppRouter {
         return MaterialPageRoute(
             builder: (_) => BlocProvider.value(
                 value: SetupSeviceLocator.sl<AuthCubit>(),
-                child: RegisterView()));
+                child: const RegisterView()));
       case Routes.appInit:
         return MaterialPageRoute(builder: (_) => AppInit());
       case Routes.homeRoute:
         return MaterialPageRoute(builder: (_) => BaseHomeScreen());
       case Routes.productDetailsRoute:
-        final args = settings.arguments as Map<String, dynamic>?;
+        final productId = settings.arguments as String;
         return MaterialPageRoute(
-            builder: (_) => ProductDetailsScreen(
-                  productId: args?['productId'] ?? '', //
-                ));
+          builder: (_) => ProductDetailsScreen(productId: productId),
+        );
       case Routes.welcomeScreen:
         return MaterialPageRoute(builder: (_) => WelcomeScreen());
 

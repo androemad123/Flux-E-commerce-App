@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:depi_graduation/utils/seed_products_helper.dart';
 
 import '../generated/l10n.dart';
 import '../presentation/resources/theme_manager.dart';
@@ -54,7 +55,7 @@ class _FluxAppState extends State<FluxApp> {
           supportedLocales: S.delegate.supportedLocales,
           debugShowCheckedModeBanner: false,
 
-          initialRoute: Routes.productDetailsRoute,
+          initialRoute: Routes.onboardingRoute,
 
           onGenerateRoute: widget.appRouter.generateRoute,
         );

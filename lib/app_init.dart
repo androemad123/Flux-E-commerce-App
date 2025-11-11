@@ -1,5 +1,6 @@
 import 'package:depi_graduation/presentation/check%20out/check_out_screen.dart';
 import 'package:depi_graduation/presentation/home/base_home_screen.dart';
+import 'package:depi_graduation/presentation/home/my_profile.dart';
 import 'package:depi_graduation/presentation/resources/color_manager.dart';
 import 'package:depi_graduation/presentation/search/search_screen.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class _AppInitState extends State<AppInit> {
     BaseHomeScreen(),
     SearchScreen(),
     CheckOutScreen(),
-    BaseHomeScreen()
+    MyProfile()
   ];
   int _currentBottomNavIndex = 0;
   @override

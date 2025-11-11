@@ -2,9 +2,9 @@ import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:flutter/material.dart';
 
 class drawReview extends StatefulWidget {
-  List<String> image;
-  int i;
-  drawReview({super.key, required this.image, required this.i});
+  final List<String> image;
+  final int i;
+  const drawReview({super.key, required this.image, required this.i});
 
   @override
   State<drawReview> createState() => _drawReviewState();

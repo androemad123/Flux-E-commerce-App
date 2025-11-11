@@ -1,7 +1,6 @@
 import 'package:depi_graduation/presentation/onboarding/subScreens/final_screen.dart';
 import 'package:depi_graduation/presentation/onboarding/subScreens/first_screen.dart';
 import 'package:depi_graduation/presentation/onboarding/subScreens/second_screen.dart';
-import 'package:depi_graduation/presentation/resources/color_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

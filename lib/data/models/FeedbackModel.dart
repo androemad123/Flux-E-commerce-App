@@ -1,12 +1,12 @@
 class Feedback {
-  String FeedbackID; //unique
+  String? FeedbackID; //unique
   String ProductID;
   String UserID;
   int rating;
   String review;
 
   Feedback({
-    required this.FeedbackID,
+    this.FeedbackID,
     required this.ProductID,
     required this.UserID,
     required this.rating,
@@ -15,7 +15,7 @@ class Feedback {
 
   Map<String, dynamic> tojson() {
     return {
-      'FeedbackID': FeedbackID,
+      if (FeedbackID != null) 'FeedbackID': FeedbackID,
       'ProductID': ProductID,
       'UserID': UserID,
       'rating': rating,
@@ -25,7 +25,7 @@ class Feedback {
 
   factory Feedback.fromJson(Map<String, dynamic> json) {
     return Feedback(
-      FeedbackID: json['FeedbackID'] ?? "No Feedback ID",
+      FeedbackID: json['FeedbackID'] ?? "",
       ProductID: json['ProductID'] ?? "No Product ID",
       UserID: json['UserID'] ?? 'No User Name',
       rating: json['rating'] ?? 0,

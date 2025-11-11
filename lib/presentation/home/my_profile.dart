@@ -2,11 +2,13 @@ import 'package:depi_graduation/presentation/resources/color_manager.dart';
 import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:depi_graduation/presentation/resources/value_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../resources/styles_manager.dart';
+import '../../app/BLoC/ProductBLoC/ProductBLoC.dart';
+import '../../utils/seed_products_helper.dart';
 
-class my_profile extends StatelessWidget {
+class MyProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,7 +72,6 @@ class my_profile extends StatelessWidget {
                     _buildTile(Icons.star, "Rate this app"),
                     Divider(height: 1.h, thickness: 0.3.h, color: ColorManager.lighterGrayLight, indent: 12.w,),
                     _buildTile(Icons.logout, "Log out"),
-
                   ],
                 ),
               ),

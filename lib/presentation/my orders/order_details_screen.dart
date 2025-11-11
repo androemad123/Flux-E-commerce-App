@@ -217,13 +217,13 @@ class OrderDetailsScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-            child: Text(product.name,
+            child: Text(product.ProductName,
                 style: boldStyle(fontSize: 14, color: Colors.black)),
           ),
-          Text("x${product.quantity}",
+          Text("x${product.ProductQuantity}",
               style: regularStyle(fontSize: 14, color: Colors.grey)),
           const SizedBox(width: 12),
-          Text("\$${(product.price * product.quantity).toStringAsFixed(2)}",
+          Text("\$${(product.ProductPrice * product.ProductQuantity).toStringAsFixed(2)}",
               style: boldStyle(fontSize: 14, color: Colors.black)),
         ],
       ),

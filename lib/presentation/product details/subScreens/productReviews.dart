@@ -4,13 +4,13 @@ import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:flutter/material.dart';
 
 class Productreviews extends StatefulWidget {
-  int numOfRatings;
-  String ratingNumber;
-  int numOfReviews;
-  List<int> nums;
-  List<double> percentages;
+  final int numOfRatings;
+  final String ratingNumber;
+  final int numOfReviews;
+  final List<int> nums;
+  final List<double> percentages;
 
-  Productreviews(
+  const Productreviews(
       {super.key,
       required this.numOfRatings,
       required this.ratingNumber,
