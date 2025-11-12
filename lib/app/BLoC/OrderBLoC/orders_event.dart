@@ -1,40 +1,68 @@
+import 'package:equatable/equatable.dart';
+
 import '../../../data/models/order_model.dart';
-abstract class OrdersEvent {}
+import '../../../data/models/order_status.dart';
 
-class LoadOrders extends OrdersEvent {
+abstract class OrdersEvent extends Equatable {
+  const OrdersEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class OrdersRequested extends OrdersEvent {
+  const OrdersRequested({required this.userId});
+
   final String userId;
-  LoadOrders(this.userId);
+
+  @override
+  List<Object?> get props => [userId];
 }
 
-class AddOrder extends OrdersEvent {
+class OrderSubmitted extends OrdersEvent {
+  const OrderSubmitted({required this.order});
+
   final OrderModel order;
-  AddOrder(this.order);
+
+  @override
+  List<Object?> get props => [order];
 }
 
-class UpdateOrderStatus extends OrdersEvent {
+class OrderStatusUpdated extends OrdersEvent {
+  const OrderStatusUpdated({
+    required this.orderId,
+    required this.status,
+  });
+
   final String orderId;
-  final String newStatus;
-  UpdateOrderStatus(this.orderId, this.newStatus);
+  final OrderStatus status;
+
+  @override
+  List<Object?> get props => [orderId, status];
 }
 
-class AddOrderRating extends OrdersEvent {
+class OrderRated extends OrdersEvent {
+  const OrderRated({
+    required this.orderId,
+    required this.rating,
+  });
+
   final String orderId;
   final double rating;
-  AddOrderRating(this.orderId, this.rating);
+
+  @override
+  List<Object?> get props => [orderId, rating];
 }
 
-class AddOrderTextReview extends OrdersEvent {
+class OrderReviewed extends OrdersEvent {
+  const OrderReviewed({
+    required this.orderId,
+    required this.review,
+  });
+
   final String orderId;
   final String review;
-  AddOrderTextReview(this.orderId, this.review);
-}
 
-class LoadRatedOrders extends OrdersEvent {
-  final String userId;
-  LoadRatedOrders(this.userId);
-}
-
-class LoadReviewedOrders extends OrdersEvent {
-  final String userId;
-  LoadReviewedOrders(this.userId);
+  @override
+  List<Object?> get props => [orderId, review];
 }

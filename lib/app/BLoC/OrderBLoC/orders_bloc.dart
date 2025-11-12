@@ -1,112 +1,194 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../../data/models/order_model.dart';
+import '../../../data/models/order_status.dart';
+import '../../../data/repositories/order_repository.dart';
 import 'orders_event.dart';
 import 'orders_state.dart';
-import '../../../data/models/order_model.dart';
 
 class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  OrdersBloc({
+    required OrderRepository orderRepository,
+  })  : _orderRepository = orderRepository,
+        super(const OrdersState()) {
+    on<OrdersRequested>(_onOrdersRequested);
+    on<OrderSubmitted>(_onOrderSubmitted);
+    on<OrderStatusUpdated>(_onOrderStatusUpdated);
+    on<OrderRated>(_onOrderRated);
+    on<OrderReviewed>(_onOrderReviewed);
+  }
 
-  OrdersBloc() : super(OrdersInitial()) {
-    on<LoadOrders>((event, emit) async {
-      emit(OrdersLoading());
-      try {
-        final snapshot = await _firestore
-            .collection('orders')
-            .where('userId', isEqualTo: event.userId)
-            .get();
+  final OrderRepository _orderRepository;
 
-        final orders = snapshot.docs
-            .map((doc) => OrderModel.fromMap(doc.data(), doc.id))
-            .toList();
+  Future<void> _onOrdersRequested(
+    OrdersRequested event,
+    Emitter<OrdersState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        loadStatus: OrdersLoadStatus.loading,
+        errorMessage: null,
+      ),
+    );
 
-        emit(OrdersLoaded(orders));
-      } catch (e) {
-        emit(OrdersError(e.toString()));
-      }
-    });
+    try {
+      final orders = await _orderRepository.fetchOrdersForUser(event.userId);
+      emit(
+        state.copyWith(
+          loadStatus: OrdersLoadStatus.success,
+          orders: orders,
+        ),
+      );
+    } catch (error) {
+      emit(
+        state.copyWith(
+          loadStatus: OrdersLoadStatus.failure,
+          errorMessage: error.toString(),
+        ),
+      );
+    }
+  }
 
-    on<AddOrder>((event, emit) async {
-      try {
-        await _firestore.collection('orders').add(event.order.toMap());
-        emit(OrderAdded());
-      } catch (e) {
-        emit(OrdersError(e.toString()));
-      }
-    });
+  Future<void> _onOrderSubmitted(
+    OrderSubmitted event,
+    Emitter<OrdersState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        operationStatus: OrderOperationStatus.submitting,
+        errorMessage: null,
+      ),
+    );
 
-    on<UpdateOrderStatus>((event, emit) async {
-      try {
-        await _firestore
-            .collection('orders')
-            .doc(event.orderId)
-            .update({'status': event.newStatus});
-        emit(OrderUpdated());
-      } catch (e) {
-        emit(OrdersError(e.toString()));
-      }
-    });
+    try {
+      final orderId = await _orderRepository.createOrder(event.order);
+      final updatedOrders = [
+        event.order.copyWith(id: orderId),
+        ...state.orders,
+      ];
 
-    on<AddOrderRating>((event, emit) async {
-      try {
-        await _firestore
-            .collection('orders')
-            .doc(event.orderId)
-            .update({'rating': event.rating});
-        emit(RatingAdded());
-      } catch (e) {
-        emit(OrdersError(e.toString()));
-      }
-    });
+      emit(
+        state.copyWith(
+          operationStatus: OrderOperationStatus.success,
+          orders: updatedOrders,
+          lastOrderId: orderId,
+        ),
+      );
+    } catch (error) {
+      emit(
+        state.copyWith(
+          operationStatus: OrderOperationStatus.failure,
+          errorMessage: error.toString(),
+        ),
+      );
+    }
+  }
 
-    on<AddOrderTextReview>((event, emit) async {
-      try {
-        await _firestore
-            .collection('orders')
-            .doc(event.orderId)
-            .update({'review': event.review});
-        emit(ReviewAdded());
-      } catch (e) {
-        emit(OrdersError(e.toString()));
-      }
-    });
+  Future<void> _onOrderStatusUpdated(
+    OrderStatusUpdated event,
+    Emitter<OrdersState> emit,
+  ) async {
+    try {
+      await _orderRepository.updateOrderStatus(
+        orderId: event.orderId,
+        status: event.status,
+      );
 
-    on<LoadRatedOrders>((event, emit) async {
-      emit(OrdersLoading());
-      try {
-        final snapshot = await _firestore
-            .collection('orders')
-            .where('userId', isEqualTo: event.userId)
-            .where('rating', isGreaterThan: 0)
-            .get();
+      final updatedOrders = state.orders.map((order) {
+        if (order.id == event.orderId) {
+          return order.copyWith(
+            status: event.status,
+            updatedAt: DateTime.now(),
+          );
+        }
+        return order;
+      }).toList();
 
-        final ratedOrders = snapshot.docs
-            .map((doc) => OrderModel.fromMap(doc.data(), doc.id))
-            .toList();
+      emit(
+        state.copyWith(
+          orders: updatedOrders,
+          operationStatus: OrderOperationStatus.success,
+        ),
+      );
+    } catch (error) {
+      emit(
+        state.copyWith(
+          operationStatus: OrderOperationStatus.failure,
+          errorMessage: error.toString(),
+        ),
+      );
+    }
+  }
 
-        emit(RatedOrdersLoaded(ratedOrders));
-      } catch (e) {
-        emit(OrdersError(e.toString()));
-      }
-    });
+  Future<void> _onOrderRated(
+    OrderRated event,
+    Emitter<OrdersState> emit,
+  ) async {
+    try {
+      await _orderRepository.addOrderRating(
+        orderId: event.orderId,
+        rating: event.rating,
+      );
 
-    on<LoadReviewedOrders>((event, emit) async {
-      emit(OrdersLoading());
-      try {
-        final snapshot = await _firestore
-            .collection('orders')
-            .where('userId', isEqualTo: event.userId)
-            .where('review', isNotEqualTo: null)
-            .get();
+      final updatedOrders = state.orders.map((order) {
+        if (order.id == event.orderId) {
+          return order.copyWith(
+            rating: event.rating,
+            updatedAt: DateTime.now(),
+          );
+        }
+        return order;
+      }).toList();
 
-        final reviewedOrders = snapshot.docs
-            .map((doc) => OrderModel.fromMap(doc.data(), doc.id))
-            .toList();
+      emit(
+        state.copyWith(
+          orders: updatedOrders,
+          operationStatus: OrderOperationStatus.success,
+        ),
+      );
+    } catch (error) {
+      emit(
+        state.copyWith(
+          operationStatus: OrderOperationStatus.failure,
+          errorMessage: error.toString(),
+        ),
+      );
+    }
+  }
 
-        emit(ReviewedOrdersLoaded(reviewedOrders));
-      } catch (e) {
-        emit(OrdersError(e.toString()));
-      }
-    });
+  Future<void> _onOrderReviewed(
+    OrderReviewed event,
+    Emitter<OrdersState> emit,
+  ) async {
+    try {
+      await _orderRepository.addOrderReview(
+        orderId: event.orderId,
+        review: event.review,
+      );
+
+      final updatedOrders = state.orders.map((order) {
+        if (order.id == event.orderId) {
+          return order.copyWith(
+            review: event.review,
+            updatedAt: DateTime.now(),
+          );
+        }
+        return order;
+      }).toList();
+
+      emit(
+        state.copyWith(
+          orders: updatedOrders,
+          operationStatus: OrderOperationStatus.success,
+        ),
+      );
+    } catch (error) {
+      emit(
+        state.copyWith(
+          operationStatus: OrderOperationStatus.failure,
+          errorMessage: error.toString(),
+        ),
+      );
+    }
   }
 }

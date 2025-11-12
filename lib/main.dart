@@ -1,4 +1,7 @@
+import 'package:depi_graduation/app/BLoC/CartBLoC/cart_bloc.dart';
+import 'package:depi_graduation/app/BLoC/CartBLoC/cart_event.dart';
 import 'package:depi_graduation/app/BLoC/FeedbackBLoC/FeedbackBLoC.dart';
+import 'package:depi_graduation/app/BLoC/OrderBLoC/orders_bloc.dart';
 import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductBLoC.dart';
 import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductEvent.dart';
 import 'package:depi_graduation/core/di/setup_service_locator.dart';
@@ -13,6 +16,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'app/flux_app.dart';
 import 'app/provider/language_provider.dart';
 import 'app/provider/theme_provider.dart';
+import 'data/repositories/order_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,16 +35,27 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
       ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<ProductBLoC>(
-            create: (_) => ProductBLoC()..add(LoadAllProducts()),
-          ),
-          BlocProvider<FeedbackBLoC>(
-            create: (_) => FeedbackBLoC()
-          ),
-        ],
-        child: FluxApp(appRouter: AppRouter()),
+      child: RepositoryProvider(
+        create: (_) => OrderRepository(),
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider<ProductBLoC>(
+              create: (_) => ProductBLoC()..add(LoadAllProducts()),
+            ),
+            BlocProvider<CartBloc>(
+              create: (_) => CartBloc()..add(const CartStarted()),
+            ),
+            BlocProvider<OrdersBloc>(
+              create: (context) => OrdersBloc(
+                orderRepository: context.read<OrderRepository>(),
+              ),
+            ),
+            BlocProvider<FeedbackBLoC>(
+              create: (_) => FeedbackBLoC(),
+            ),
+          ],
+          child: FluxApp(appRouter: AppRouter()),
+        ),
       ),
     ),
   );

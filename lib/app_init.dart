@@ -1,4 +1,4 @@
-import 'package:depi_graduation/presentation/check%20out/check_out_screen.dart';
+import 'package:depi_graduation/presentation/Cart/ProductsCart.dart';
 import 'package:depi_graduation/presentation/home/base_home_screen.dart';
 import 'package:depi_graduation/presentation/home/my_profile.dart';
 import 'package:depi_graduation/presentation/resources/color_manager.dart';
@@ -17,7 +17,7 @@ class _AppInitState extends State<AppInit> {
   List screens = [
     BaseHomeScreen(),
     SearchScreen(),
-    CheckOutScreen(),
+    const ProductsCartScreen(),
     MyProfile()
   ];
   int _currentBottomNavIndex = 0;

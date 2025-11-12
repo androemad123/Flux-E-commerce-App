@@ -1,7 +1,10 @@
+import 'package:depi_graduation/app/BLoC/CheckoutBLoC/checkout_bloc.dart';
+import 'package:depi_graduation/app/BLoC/CheckoutBLoC/checkout_event.dart';
 import 'package:depi_graduation/presentation/resources/color_manager.dart';
 import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:depi_graduation/presentation/widgets/app_text_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -12,9 +15,12 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
+  String? selectedPaymentMethod;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final checkoutState = context.watch<CheckoutBloc>().state;
     return IntrinsicHeight(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -35,13 +41,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _paymentMethodCard(theme, 'Cash', 'assets/images/Money icon.png'),
+              _paymentMethodCard(
+                theme,
+                methodKey: 'cash',
+                title: 'Cash',
+                imagePath: 'assets/images/Money icon.png',
+              ),
               SizedBox(
                 width: 25.w,
               ),
               _paymentMethodCard(
-                  theme, 'Credit Card', 'assets/images/Credit Card Icon.png',
-                  color: ColorManager.lightGrayLight),
+                theme,
+                methodKey: 'card',
+                title: 'Credit Card',
+                imagePath: 'assets/images/Credit Card Icon.png',
+                color: ColorManager.lightGrayLight,
+              ),
             ],
           ),
           SizedBox(
@@ -58,7 +73,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
             ),
             trailing: Text(
-              '\$ 55',
+              '\$${checkoutState.subtotal.toStringAsFixed(2)}',
               style: theme.textTheme.bodyLarge,
             ),
           ),
@@ -71,7 +86,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 )),
             trailing: Text(
-              '\$ 55',
+              '\$${checkoutState.shippingFee.toStringAsFixed(2)}',
               style: theme.textTheme.bodyLarge,
             ),
           ),
@@ -84,7 +99,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               style: theme.textTheme.bodyLarge,
             ),
             trailing: Text(
-              '\$ 55',
+              '\$${checkoutState.total.toStringAsFixed(2)}',
               style: theme.textTheme.bodyLarge,
             ),
           ),
@@ -93,7 +108,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
           ),
           Spacer(),
           AppTextButton(
-            onPressed: widget.goNext,
+            onPressed: () {
+              if (selectedPaymentMethod == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Please select a payment method.'),
+                  ),
+                );
+                return;
+              }
+
+              context.read<CheckoutBloc>().add(
+                    CheckoutPaymentMethodSelected(selectedPaymentMethod!),
+                  );
+              widget.goNext();
+            },
             text: 'Continue Payment',
             width: double.infinity,
             color: Colors.black,
@@ -103,45 +132,66 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  Widget _paymentMethodCard(ThemeData theme, String title, String imagePath,
-      {Color? color}) {
-    return Container(
-      width: 135,
-      height: 100,
-      decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
+  Widget _paymentMethodCard(
+    ThemeData theme, {
+    required String methodKey,
+    required String title,
+    required String imagePath,
+    Color? color,
+  }) {
+    final bool isSelected = selectedPaymentMethod == methodKey;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedPaymentMethod = methodKey;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: 135,
+        height: 100,
+        decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.r),
-          border: null,
+          border: Border.all(
+            color:
+                isSelected ? theme.colorScheme.primary : Colors.transparent,
+            width: 2,
+          ),
           boxShadow: [
             BoxShadow(
-                color: theme.shadowColor.withValues(alpha: 0.5),
-                blurRadius: 10.0,
-                spreadRadius: 5,
-                offset: Offset(0, 10))
-          ]),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.circular(15.r),
-          border: null,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              imagePath,
-              color: color ?? null,
-            ),
-            SizedBox(
-              height: 10.h,
-            ),
-            Text(
-              title,
-              style: theme.textTheme.titleLarge!
-                  .copyWith(color: ColorManager.lightGrayLight),
+              color: theme.shadowColor.withValues(alpha: 0.3),
+              blurRadius: 8.0,
+              spreadRadius: 2,
+              offset: const Offset(0, 6),
             )
           ],
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15.r),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                imagePath,
+                color: color ?? (isSelected ? theme.colorScheme.primary : null),
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              Text(
+                title,
+                style: theme.textTheme.titleLarge!.copyWith(
+                  color: isSelected
+                      ? theme.colorScheme.primary
+                      : ColorManager.lightGrayLight,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

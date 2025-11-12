@@ -60,11 +60,12 @@ class FeedbackBLoC extends Bloc<FeedbackEvent, FeedbackState> {
         final userID = FirebaseAuth.instance.currentUser!.uid;
 
         final feedback = Feedback(
-            // FeedbackID: feedbackID,
             ProductID: event.productID,
             UserID: userID,
             rating: event.rating,
-            review: event.review);
+            review: event.review,
+            orderId: event.orderId,
+        );
 
         try {
           String docID = await firestore.create(feedback);

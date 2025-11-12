@@ -1,35 +1,50 @@
+import 'package:equatable/equatable.dart';
+
 import '../../../data/models/order_model.dart';
 
-abstract class OrdersState {}
+enum OrdersLoadStatus { initial, loading, success, failure }
 
-class OrdersInitial extends OrdersState {}
+enum OrderOperationStatus { idle, submitting, success, failure }
 
-class OrdersLoading extends OrdersState {}
+class OrdersState extends Equatable {
+  const OrdersState({
+    this.loadStatus = OrdersLoadStatus.initial,
+    this.operationStatus = OrderOperationStatus.idle,
+    this.orders = const [],
+    this.errorMessage,
+    this.lastOrderId,
+  });
 
-class OrdersLoaded extends OrdersState {
+  final OrdersLoadStatus loadStatus;
+  final OrderOperationStatus operationStatus;
   final List<OrderModel> orders;
-  OrdersLoaded(this.orders);
-}
+  final String? errorMessage;
+  final String? lastOrderId;
 
-class OrdersError extends OrdersState {
-  final String message;
-  OrdersError(this.message);
-}
+  OrdersState copyWith({
+    OrdersLoadStatus? loadStatus,
+    OrderOperationStatus? operationStatus,
+    List<OrderModel>? orders,
+    String? errorMessage,
+    String? lastOrderId,
+  }) {
+    return OrdersState(
+      loadStatus: loadStatus ?? this.loadStatus,
+      operationStatus: operationStatus ?? this.operationStatus,
+      orders: orders ?? this.orders,
+      errorMessage: errorMessage,
+      lastOrderId: lastOrderId ?? this.lastOrderId,
+    );
+  }
 
-class OrderAdded extends OrdersState {}
+  bool get isLoading => loadStatus == OrdersLoadStatus.loading;
 
-class OrderUpdated extends OrdersState {}
-
-class RatingAdded extends OrdersState {}
-
-class ReviewAdded extends OrdersState {}
-
-class RatedOrdersLoaded extends OrdersState {
-  final List<OrderModel> ratedOrders;
-  RatedOrdersLoaded(this.ratedOrders);
-}
-
-class ReviewedOrdersLoaded extends OrdersState {
-  final List<OrderModel> reviewedOrders;
-  ReviewedOrdersLoaded(this.reviewedOrders);
+  @override
+  List<Object?> get props => [
+        loadStatus,
+        operationStatus,
+        orders,
+        errorMessage,
+        lastOrderId,
+      ];
 }

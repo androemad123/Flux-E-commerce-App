@@ -18,14 +18,16 @@ class AddFeedback extends FeedbackEvent {
   final String productID;
   final int rating;
   final String review;
+  final String? orderId;
 
   AddFeedback({
     required this.productID,
     required this.rating,
     required this.review,
+    this.orderId,
   });
   @override
-  List<Object?> get props => [productID,rating, review];
+  List<Object?> get props => [productID, rating, review, orderId];
 }
 
 class DeleteFeedback extends FeedbackEvent {

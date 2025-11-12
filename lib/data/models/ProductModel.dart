@@ -53,7 +53,8 @@ class Product {
     List<String>? colors;
     if (json['ProductColors'] != null) {
       if (json['ProductColors'] is List) {
-        colors = (json['ProductColors'] as List).map((e) => e.toString()).toList();
+        colors =
+            (json['ProductColors'] as List).map((e) => e.toString()).toList();
       } else {
         colors = [];
       }
@@ -65,7 +66,8 @@ class Product {
     List<String>? sizes;
     if (json['ProductSizes'] != null) {
       if (json['ProductSizes'] is List) {
-        sizes = (json['ProductSizes'] as List).map((e) => e.toString()).toList();
+        sizes =
+            (json['ProductSizes'] as List).map((e) => e.toString()).toList();
       } else {
         sizes = [];
       }
@@ -78,7 +80,7 @@ class Product {
     if (json['ProductImageURL'] != null && json['ProductImageURL'] is List) {
       List<dynamic> imageList = json['ProductImageURL'] as List;
       imageUrls = imageList.map((e) => e.toString()).toList();
-      
+
       // Replace empty strings with placeholder images
       for (int i = 0; i < imageUrls.length; i++) {
         if (imageUrls[i].isEmpty || imageUrls[i].trim().isEmpty) {
@@ -86,7 +88,7 @@ class Product {
         }
       }
     }
-    
+
     // If no images provided, add at least one placeholder
     if (imageUrls.isEmpty) {
       imageUrls = [placeholderImages[0]];
@@ -119,7 +121,8 @@ class Product {
     return Product(
       ProductID: productId.isEmpty ? 'No ID' : productId,
       ProductName: json['ProductName']?.toString() ?? 'No Product Name',
-      ProductDescription: json['ProductDescription']?.toString() ?? 'No Product description',
+      ProductDescription:
+          json['ProductDescription']?.toString() ?? 'No Product description',
       ProductCategotry: json['ProductCategotry']?.toString(),
       ProductColors: colors,
       ProductSizes: sizes,
@@ -141,6 +144,7 @@ class Product {
     }
     return placeholderImages[0];
   }
+
   // Helpful for updating fields without rebuilding everything
   Product copyWith({
     String? id,

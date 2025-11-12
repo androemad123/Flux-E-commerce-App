@@ -5,10 +5,17 @@ import 'package:depi_graduation/presentation/resources/color_manager.dart';
 import 'package:depi_graduation/presentation/resources/styles_manager.dart';
 import 'package:depi_graduation/presentation/widgets/app_text_button.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:depi_graduation/app/BLoC/FeedbackBLoC/FeedbackBLoC.dart';
+import 'package:depi_graduation/app/BLoC/FeedbackBLoC/FeedbackEvent.dart';
+import 'package:depi_graduation/app/BLoC/FeedbackBLoC/FeedbackState.dart';
+
 import '../../generated/l10n.dart';
 
 class RateProductScreen extends StatefulWidget {
-  const RateProductScreen({super.key});
+  final String productId;
+  final String? orderId;
+  const RateProductScreen({super.key, required this.productId, this.orderId});
 
   @override
   State<RateProductScreen> createState() => _RateProductScreenState();
@@ -17,13 +24,14 @@ class RateProductScreen extends StatefulWidget {
 class _RateProductScreenState extends State<RateProductScreen> {
   int _rating = 0;
   final TextEditingController _reviewController = TextEditingController();
+  bool _submitted = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_rounded,color: Colors.black,),
+          icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.black,),
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
@@ -34,109 +42,153 @@ class _RateProductScreenState extends State<RateProductScreen> {
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Info box
-            Container(
-              height: 56.h,
-              width: double.infinity,
-              padding: EdgeInsets.all(14.w),
-              decoration: BoxDecoration(
-                color: ColorManager.darkGrayLight,
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: Row(
+      body: BlocConsumer<FeedbackBLoC, FeedbackState>(
+        listener: (context, state) {
+          if (state is FeedbackAdded && _submitted) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text('Thank you for your feedback!'),
+            ));
+            Navigator.of(context).pop();
+          }
+          if (state is ErrorState && _submitted) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(state.errorMSG),
+              backgroundColor: Colors.redAccent,
+            ));
+            setState(() { _submitted = false; });
+          }
+        },
+        builder: (context, state) {
+          final isLoading = state is FeedbackLoading;
+          return AbsorbPointer(
+            absorbing: isLoading,
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(Icons.card_giftcard, color: Colors.white, size: 20.sp),
-                  SizedBox(width: 8.w),
-                  Expanded(
-                    child: Text(
-                      S.of(context).submitReviewInfo,
-                      style: regularStyle(
+                  // Info box
+                  Container(
+                    height: 56.h,
+                    width: double.infinity,
+                    padding: EdgeInsets.all(14.w),
+                    decoration: BoxDecoration(
+                      color: ColorManager.darkGrayLight,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.card_giftcard, color: Colors.white, size: 20.sp),
+                        SizedBox(width: 8.w),
+                        Expanded(
+                          child: Text(
+                            S.of(context).submitReviewInfo,
+                            style: regularStyle(
+                              fontSize: 14.sp,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 24.h),
+
+                  // Star rating
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(5, (index) {
+                      return IconButton(
+                        icon: Icon(
+                          index < _rating ? Icons.star : Icons.star_border,
+                          color: ColorManager.greenLight,
+                          size: 36.sp,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _rating = index + 1;
+                          });
+                        },
+                      );
+                    }),
+                  ),
+                  SizedBox(height: 16.h),
+
+                  // Text field
+                  TextField(
+                    controller: _reviewController,
+                    maxLines: 7,
+                    maxLength: 200,
+                    decoration: InputDecoration(
+                      hintText: S.of(context).reviewFieldHint,
+                      hintStyle: regularStyle(
                         fontSize: 14.sp,
-                        color: Colors.white,
+                        color: ColorManager.lightGrayLight,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: BorderSide(color: Colors.black12),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: BorderSide(color: Colors.black12),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                        borderSide: BorderSide(color: Colors.black12),
                       ),
                     ),
                   ),
-                  const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
+                  SizedBox(height: 16.h),
+
+                  // Upload image/video
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      _buildUploadBox(Icons.image, S.of(context).uploadImage),
+                      SizedBox(width: 16.w),
+                      _buildUploadBox(Icons.camera_alt, S.of(context).uploadCamera),
+                    ],
+                  ),
+                  SizedBox(height: 40.h),
+
+                  // Submit button
+                  AppTextButton(
+                    width: 315,
+                    text: isLoading ? 'Submitting...' : S.of(context).submitReview,
+                    onPressed: isLoading
+                        ? null
+                        : () {
+                            FocusScope.of(context).unfocus();
+                            final review = _reviewController.text.trim();
+                            if (_rating == 0 || review.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                content: Text('Please give a rating and enter a review.'),
+                                backgroundColor: Colors.redAccent,
+                              ));
+                              return;
+                            }
+                            setState(() { _submitted = true; });
+                            context.read<FeedbackBLoC>().add(AddFeedback(
+                              productID: widget.productId,
+                              orderId: widget.orderId,
+                              rating: _rating,
+                              review: review,
+                            ));
+                          },
+                    fontSize: 20,
+                    textColor: Colors.white,
+                  ),
+                  if (isLoading) const Padding(
+                    padding: EdgeInsets.only(top: 24.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
                 ],
               ),
             ),
-            SizedBox(height: 24.h),
-
-            // Star rating
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(5, (index) {
-                return IconButton(
-                  icon: Icon(
-                    index < _rating ? Icons.star : Icons.star_border,
-                    color: ColorManager.greenLight,
-                    size: 36.sp,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _rating = index + 1;
-                    });
-                  },
-                );
-              }),
-            ),
-            SizedBox(height: 16.h),
-
-            // Text field
-            TextField(
-              controller: _reviewController,
-              maxLines: 7,
-              maxLength: 200,
-              decoration: InputDecoration(
-                hintText: S.of(context).reviewFieldHint,
-                hintStyle: regularStyle(
-                  fontSize: 14.sp,
-                  color: ColorManager.lightGrayLight,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(color: Colors.black12),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(color: Colors.black12),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(color: Colors.black12),
-                ),
-              ),
-            ),
-            SizedBox(height: 16.h),
-
-            // Upload image/video
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                _buildUploadBox(Icons.image, S.of(context).uploadImage),
-                SizedBox(width: 16.w),
-                _buildUploadBox(Icons.camera_alt, S.of(context).uploadCamera),
-              ],
-            ),
-            SizedBox(height: 40.h),
-
-            // Submit button
-            AppTextButton(
-              width: 315,
-              text: S.of(context).submitReview,
-              onPressed: () {
-                // Handle submit
-              },
-              fontSize: 20,
-              textColor: Colors.white,
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'package:depi_graduation/app/BLoC/CartBLoC/cart_bloc.dart';
+import 'package:depi_graduation/app/BLoC/CartBLoC/cart_event.dart';
 import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductBLoC.dart';
 import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductEvent.dart';
 import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductState.dart';
@@ -10,9 +12,12 @@ import 'package:depi_graduation/presentation/product%20details/subScreens/produc
 import 'package:depi_graduation/presentation/product%20details/subScreens/starsRating.dart';
 import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:depi_graduation/presentation/resources/value_manager.dart';
+import 'package:depi_graduation/routing/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../resources/color_from_string_helper.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final String productId;
@@ -28,6 +33,8 @@ class ProductDetailsScreen extends StatefulWidget {
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   bool isFavourite = false;
+  String? _selectedColor;
+  String? _selectedSize;
 
   @override
   void initState() {
@@ -51,6 +58,24 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
           if (state is ProductLoaded) {
             final product = state.product;
+            final availableColors = product.ProductColors ?? [];
+            final availableSizes = product.ProductSizes ?? [];
+
+            _selectedColor ??=
+                availableColors.isNotEmpty ? availableColors.first : null;
+            _selectedSize ??=
+                availableSizes.isNotEmpty ? availableSizes.first : null;
+
+            final colorWidgets =
+                availableColors.map((c) => colorFromString(c)).toList();
+            final int selectedColorIndex = (_selectedColor != null &&
+                    availableColors.contains(_selectedColor!))
+                ? availableColors.indexOf(_selectedColor!)
+                : 0;
+            final int selectedSizeIndex = (_selectedSize != null &&
+                    availableSizes.contains(_selectedSize!))
+                ? availableSizes.indexOf(_selectedSize!)
+                : 0;
 
             return CustomScrollView(
               slivers: [
@@ -71,7 +96,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       imageSlider(productID: widget.productId),
-
                       Container(
                         decoration: BoxDecoration(
                           color: Theme.of(context).scaffoldBackgroundColor,
@@ -99,18 +123,33 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               const SizedBox(height: 15),
                               const Divider(thickness: 0.1, height: 0.5),
                               const SizedBox(height: 10),
-
-                              const product_color_size(
-                                clrs: [Colors.red, Colors.black, Colors.blue],
-                                txt: ["S", "M", "L"],
+                              product_color_size(
+                                clrs: colorWidgets,
+                                txt: availableSizes,
+                                selectedColorIndex: selectedColorIndex,
+                                selectedSizeIndex: selectedSizeIndex,
+                                onColorChanged: (index) {
+                                  if (index >= 0 &&
+                                      index < availableColors.length) {
+                                    setState(() {
+                                      _selectedColor = availableColors[index];
+                                    });
+                                  }
+                                },
+                                onSizeChanged: (index) {
+                                  if (index >= 0 &&
+                                      index < availableSizes.length) {
+                                    setState(() {
+                                      _selectedSize = availableSizes[index];
+                                    });
+                                  }
+                                },
                               ),
                               const SizedBox(height: 10),
                               const Divider(thickness: 0.1, height: 0.5),
-
                               Productdiscription(productID: product.ProductID),
                               const SizedBox(height: 5),
                               const Divider(thickness: 0.1, height: 0.5),
-
                               const Productreviews(
                                 numOfRatings: 83,
                                 ratingNumber: "4.9",
@@ -131,20 +170,46 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 SliverToBoxAdapter(
                   child: Padding(
                     padding:
-                    EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+                        EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
                     child: SizedBox(
                       width: double.infinity,
                       height: 60.h,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                          Theme.of(context).colorScheme.onSurface,
+                              Theme.of(context).colorScheme.onSurface,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
                         onPressed: () {
-                          print("Add to cart pressed");
+                          context.read<CartBloc>().add(
+                                CartItemAdded(
+                                  product: product,
+                                  selectedColor: _selectedColor,
+                                  selectedSize: _selectedSize,
+                                ),
+                              );
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "${product.ProductName} added to cart",
+                                style: TextStyle(
+                                  fontFamily: FontConstants.fontFamily,
+                                ),
+                              ),
+                              behavior: SnackBarBehavior.floating,
+                              duration: const Duration(seconds: 2),
+                              action: SnackBarAction(
+                                label: "View Cart",
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                      context, Routes.cartRoute);
+                                },
+                              ),
+                            ),
+                          );
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -160,8 +225,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontFamily: FontConstants.fontFamily,
-                                color:
-                                Theme.of(context).colorScheme.onPrimary,
+                                color: Theme.of(context).colorScheme.onPrimary,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

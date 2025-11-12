@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../app/BLoC/ProductBLoC/ProductEvent.dart';
+import '../../routing/routes.dart';
 import '../resources/styles_manager.dart';
 import 'widgets/category_section.dart';
 import 'widgets/slider_banner.dart';
@@ -141,7 +142,7 @@ class _BaseHomeScreenState extends State<BaseHomeScreen> {
           ),
           _buildDrawerItem(Icons.home, 'Home', () {}),
           _buildDrawerItem(Icons.search, 'Discover', () {}),
-          _buildDrawerItem(Icons.shopping_bag, 'My Order', () {}),
+          _buildDrawerItem(Icons.shopping_bag, 'My Orders', () {Navigator.pushNamed(context, Routes.myOrdersScreen);}),
           _buildDrawerItem(Icons.person, 'My Profile', () {
             Navigator.push(context, MaterialPageRoute(builder: (context) => MyProfile()));
           }),
