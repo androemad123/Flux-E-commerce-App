@@ -66,11 +66,13 @@ class OrderCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "${S.of(context).myOrdersTitle} #${order.id}",
-                  style: boldStyle(
-                    fontSize: 16,
-                    color: ColorManager.darkGrayLight,
+                Expanded(
+                  child: Text(
+                    "${S.of(context).myOrdersTitle} #${order.id}",
+                    style: boldStyle(
+                      fontSize: 16,
+                      color: ColorManager.darkGrayLight,
+                    ),
                   ),
                 ),
                 Text(
