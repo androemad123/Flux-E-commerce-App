@@ -6,6 +6,7 @@ import 'package:depi_graduation/presentation/widgets/app_text_button.dart';
 import 'package:depi_graduation/presentation/widgets/app_text_field.dart';
 import 'package:depi_graduation/routing/routes.dart';
 import 'package:depi_graduation/core/methods/validators.dart';
+import 'package:depi_graduation/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -38,7 +39,7 @@ class _LoginFormState extends State<LoginForm> {
             Navigator.pushNamedAndRemoveUntil(context, Routes.appInit, (route) => false,);
           } else if (state.isLoginError == true) {
             final message =
-                state.loginErrorMessage ?? 'Login failed. Please try again.';
+                state.loginErrorMessage ?? S.of(context).loginFailed;
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(SnackBar(
@@ -55,14 +56,14 @@ class _LoginFormState extends State<LoginForm> {
                 children: [
                   AppTextField(
                     controller: _emailController,
-                    hintText: 'Email',
+                    hintText: S.of(context).email,
                     keyboardType: TextInputType.emailAddress,
                     validator: AppValidators.validateEmail,
                   ),
                   SizedBox(height: 12.h),
                   AppTextField(
                     controller: _passwordController,
-                    hintText: 'Password',
+                    hintText: S.of(context).password,
                     keyboardType: TextInputType.visiblePassword,
                     isPassword: true,
                     validator: AppValidators.validatePassword,
@@ -70,7 +71,7 @@ class _LoginFormState extends State<LoginForm> {
                   SizedBox(height: 12.h),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: Text("Forgot Password?",
+                    child: Text(S.of(context).forgotPassword,
                         style: regularStyle(
                             fontSize: 13.sp,
                             color: ColorManager.lightGrayLight)),
@@ -78,7 +79,7 @@ class _LoginFormState extends State<LoginForm> {
                   SizedBox(height: 20.h),
                                      AppTextButton(
                      textColor: ColorManager.primaryLight,
-                     text: 'Login',
+                     text: S.of(context).login,
                      isLoading: state.isLoginLoading ?? false,
                      onPressed: state.isLoginLoading == true ? null : () {
                        if (_formKey.currentState!.validate()) {

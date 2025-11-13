@@ -9,6 +9,7 @@ import 'package:depi_graduation/presentation/resources/color_manager.dart';
 import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:depi_graduation/presentation/resources/styles_manager.dart';
 import 'package:depi_graduation/presentation/shop%20together/shared_cart_details_screen.dart';
+import 'package:depi_graduation/generated/l10n.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -77,32 +78,32 @@ class _ShopTogetherScreenState extends State<ShopTogetherScreen> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: const Text('Create Shared Cart'),
+          title: Text(S.of(context).createSharedCart),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   controller: nameController,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter cart name',
+                  decoration: InputDecoration(
+                    hintText: S.of(context).enterCartName,
                     border: OutlineInputBorder(),
-                    labelText: 'Cart Name',
+                    labelText: S.of(context).cartName,
                   ),
                   autofocus: true,
                 ),
                 const SizedBox(height: 16),
-                const Text('Invite people by email:'),
+                Text(S.of(context).invitePeopleByEmail),
                 const SizedBox(height: 8),
                 Row(
                   children: [
                     Expanded(
                       child: TextField(
                         controller: emailController,
-                        decoration: const InputDecoration(
-                          hintText: 'Enter email',
+                        decoration: InputDecoration(
+                          hintText: S.of(context).enterEmail,
                           border: OutlineInputBorder(),
-                          labelText: 'Email',
+                          labelText: S.of(context).email,
                         ),
                         keyboardType: TextInputType.emailAddress,
                       ),
@@ -140,7 +141,7 @@ class _ShopTogetherScreenState extends State<ShopTogetherScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: Text(S.of(context).cancel),
             ),
             TextButton(
               onPressed: () async {
@@ -165,7 +166,7 @@ class _ShopTogetherScreenState extends State<ShopTogetherScreen> {
                   }
                 }
               },
-              child: const Text('Create'),
+              child: Text(S.of(context).create),
             ),
           ],
         ),
@@ -178,7 +179,7 @@ class _ShopTogetherScreenState extends State<ShopTogetherScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Shop Together"),
+        title: Text(S.of(context).shopTogether),
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
@@ -192,7 +193,7 @@ class _ShopTogetherScreenState extends State<ShopTogetherScreen> {
         listener: (context, state) {
           if (state is SharedCartCreated) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Shared cart created successfully!')),
+              SnackBar(content: Text(S.of(context).sharedCartCreatedSuccessfully)),
             );
             
             // Send pending invitations if any
@@ -224,6 +225,16 @@ class _ShopTogetherScreenState extends State<ShopTogetherScreen> {
           }
         },
         builder: (context, state) {
+          // If state is SharedCartItemsLoaded (from cart details), reload carts when coming back
+          if (state is SharedCartItemsLoaded) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) {
+                _loadSharedCarts();
+              }
+            });
+            return const Center(child: CircularProgressIndicator());
+          }
+          
           if (state is SharedCartLoading) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -239,7 +250,7 @@ class _ShopTogetherScreenState extends State<ShopTogetherScreen> {
                         size: 64, color: ColorManager.lightGrayLight),
                     const SizedBox(height: 16),
                     Text(
-                      'No shared carts yet',
+                      S.of(context).noSharedCartsYet,
                       style: TextStyle(
                         color: ColorManager.lightGrayLight,
                         fontSize: 16,
@@ -247,7 +258,7 @@ class _ShopTogetherScreenState extends State<ShopTogetherScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Create one to start shopping together!',
+                      S.of(context).createOneToStartShoppingTogether,
                       style: TextStyle(
                         color: ColorManager.lighterGrayLight,
                         fontSize: 14,
@@ -314,7 +325,7 @@ class _ShopTogetherScreenState extends State<ShopTogetherScreen> {
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Text(
-                                      'Owner',
+                                      S.of(context).owner,
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 12.sp,

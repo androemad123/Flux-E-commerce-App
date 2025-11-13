@@ -6,6 +6,7 @@ import 'package:depi_graduation/presentation/widgets/app_text_button.dart';
 import 'package:depi_graduation/presentation/widgets/app_text_field.dart';
 import 'package:depi_graduation/routing/routes.dart';
 import 'package:depi_graduation/core/methods/validators.dart';
+import 'package:depi_graduation/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -37,10 +38,10 @@ class _RegisterFormState extends State<RegisterForm> {
 
   String? _validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please confirm your password';
+      return S.of(context).pleaseConfirmYourPassword;
     }
     if (value != _passwordController.text) {
-      return 'Passwords do not match';
+      return S.of(context).passwordsDoNotMatch;
     }
     return null;
   }
@@ -55,7 +56,7 @@ class _RegisterFormState extends State<RegisterForm> {
             Navigator.pushNamed(context, Routes.loginRoute);
           } else if (state.isRegisterError == true) {
             final message = state.registerErrorMessage ??
-                'Registration failed. Please try again.';
+                S.of(context).registrationFailed;
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(SnackBar(
@@ -72,14 +73,14 @@ class _RegisterFormState extends State<RegisterForm> {
                 children: [
                   AppTextField(
                     controller: _nameController,
-                    hintText: 'User Name',
+                    hintText: S.of(context).userName,
                     keyboardType: TextInputType.name,
                     validator: AppValidators.validateName,
                   ),
                   SizedBox(height: 12.h),
                   AppTextField(
                     controller: _emailController,
-                    hintText: 'Email',
+                    hintText: S.of(context).email,
                     keyboardType: TextInputType.emailAddress,
                     validator: AppValidators.validateEmail,
                   ),
@@ -88,7 +89,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   SizedBox(height: 12.h),
                   AppTextField(
                     controller: _passwordController,
-                    hintText: 'Password',
+                    hintText: S.of(context).password,
                     keyboardType: TextInputType.visiblePassword,
                     isPassword: true,
                     validator: AppValidators.validatePassword,
@@ -96,7 +97,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   SizedBox(height: 12.h),
                   AppTextField(
                     controller: _confirmPasswordController,
-                    hintText: 'Confirm Password',
+                    hintText: S.of(context).confirmPassword,
                     keyboardType: TextInputType.visiblePassword,
                     isPassword: true,
                     validator: _validateConfirmPassword,
@@ -105,7 +106,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   AppTextButton(
                     // textColor: AppColors.onTertiary,
                     // fontSize: 16,
-                    text: 'Register',
+                    text: S.of(context).register,
                     isLoading: state.isRegisterLoading ?? false,
                     onPressed: state.isRegisterLoading == true ? null : () {
                       if (_formKey.currentState!.validate()) {

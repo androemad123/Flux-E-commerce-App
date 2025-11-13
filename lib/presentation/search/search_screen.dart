@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:depi_graduation/generated/l10n.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -42,8 +43,8 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text(
-          'Discover',
+        title: Text(
+          S.of(context).discover,
           style: TextStyle(
             color: Colors.black87,
             fontWeight: FontWeight.w600,
@@ -74,7 +75,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   child: TextField(
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.search),
-                      hintText: 'Search',
+                      hintText: S.of(context).search,
                       filled: true,
                       fillColor: Colors.grey.shade100,
                       contentPadding: const EdgeInsets.symmetric(vertical: 0),

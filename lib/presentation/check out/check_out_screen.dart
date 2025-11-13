@@ -4,6 +4,7 @@ import 'package:depi_graduation/presentation/check%20out/sub%20screens/final_che
 import 'package:depi_graduation/presentation/check%20out/sub%20screens/payment_screen.dart';
 import 'package:depi_graduation/presentation/check%20out/sub%20screens/shipping_screen.dart';
 import 'package:depi_graduation/presentation/resources/value_manager.dart';
+import 'package:depi_graduation/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -39,10 +40,10 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     if (checkoutState.cartItems.isEmpty) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Check Out'),
+          title: Text(S.of(context).checkOut),
         ),
-        body: const Center(
-          child: Text('Your cart is empty.'),
+        body: Center(
+          child: Text(S.of(context).yourCartIsEmptyFull),
         ),
       );
     }
@@ -71,7 +72,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Check Out'),
+          title: Text(S.of(context).checkOut),
           leading: currentStep == 0
               ? null
               : IconButton(onPressed: goToPrevStep, icon: const Icon(Icons.arrow_back)),

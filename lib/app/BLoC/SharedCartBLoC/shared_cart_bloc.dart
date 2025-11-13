@@ -74,8 +74,9 @@ class SharedCartBloc extends Bloc<SharedCartEvent, SharedCartState> {
   }
 
   Future<void> _onLoadSharedCartItems(
-      LoadSharedCartItems event, Emitter<SharedCartState> emit) async {
-    emit(SharedCartLoading());
+      LoadSharedCartItems event,
+      Emitter<SharedCartState> emit,
+      ) async {
     try {
       final snapshot = await _firestore
           .collection('sharedCarts')
@@ -85,9 +86,9 @@ class SharedCartBloc extends Bloc<SharedCartEvent, SharedCartState> {
 
       final items = snapshot.docs
           .map((doc) => SharedCartItem.fromMap({
-                ...doc.data(),
-                'id': doc.id,
-              }))
+        ...doc.data(),
+        'id': doc.id,
+      }))
           .toList();
 
       emit(SharedCartItemsLoaded(cartId: event.cartId, items: items));
@@ -95,6 +96,7 @@ class SharedCartBloc extends Bloc<SharedCartEvent, SharedCartState> {
       emit(SharedCartError(e.toString()));
     }
   }
+
 
   Future<void> _onAddItemToSharedCart(
       AddItemToSharedCart event, Emitter<SharedCartState> emit) async {

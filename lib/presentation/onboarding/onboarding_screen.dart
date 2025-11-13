@@ -1,6 +1,7 @@
 import 'package:depi_graduation/presentation/onboarding/subScreens/final_screen.dart';
 import 'package:depi_graduation/presentation/onboarding/subScreens/first_screen.dart';
 import 'package:depi_graduation/presentation/onboarding/subScreens/second_screen.dart';
+import 'package:depi_graduation/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -105,7 +106,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           "/loginRoute"); // Replace with your route
                     },
                     child: Text(
-                      'Shopping Now',
+                      S.of(context).shoppingNow,
                       style: TextStyle(color: Colors.white),
                     ),
                   ),

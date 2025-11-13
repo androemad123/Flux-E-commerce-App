@@ -31,9 +31,9 @@ class OrderDetailsScreen extends StatelessWidget {
       case OrderStatus.pending:
         return S.of(context).pending;
       case OrderStatus.processing:
-        return 'Processing';
+        return S.of(context).processing;
       case OrderStatus.shipped:
-        return 'Shipped';
+        return S.of(context).shipped;
       case OrderStatus.delivered:
         return S.of(context).delivered;
       case OrderStatus.cancelled:

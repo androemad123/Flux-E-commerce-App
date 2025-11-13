@@ -2,25 +2,24 @@ import 'package:depi_graduation/presentation/resources/color_manager.dart';
 import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:depi_graduation/presentation/resources/value_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../app/BLoC/ProductBLoC/ProductBLoC.dart';
-import '../../utils/seed_products_helper.dart';
+import '../../firebase_services/firebase_auth_services.dart';
+import '../../routing/routes.dart';
+import '../../generated/l10n.dart';
 
 class MyProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final _auth = FirebaseAuth.instance;
+    final _firestore = FirebaseFirestore.instance;
+    final user = _auth.currentUser;
+    final authService = FirebaseAuthServices();
+
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              Icons.arrow_back_ios_rounded,
-              color: Colors.black,
-            )),
         backgroundColor: ColorManager.whiteLight,
       ),
       body: Padding(
@@ -31,21 +30,42 @@ class MyProfile extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(bottom: AppPadding.p18),
                 child: Center(
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      radius: 30.r,
-                      backgroundImage: NetworkImage("https://wallpapers.com/images/hd/generic-male-avatar-icon-piiktqtfffyzulft.jpg"),
-                    ),
-                    title: Text("Name of user" , style: TextStyle(
-                      fontWeight: FontWeightManager.bold,
-                      color: ColorManager.primaryLight,
-                    ),),
-                    subtitle: Text("his email", style: TextStyle(
-                      fontWeight: FontWeightManager.regular,
-                      color: ColorManager.primaryLight,
-                      fontSize: FontSize.s16,
-                    ),),
-                    trailing: IconButton(onPressed: (){}, icon: Icon(Icons.settings)),
+                  child: FutureBuilder<DocumentSnapshot>(
+                    future: user != null
+                        ? _firestore.collection('users').doc(user.uid).get()
+                        : null,
+                    builder: (context, snapshot) {
+                      String userName = S.of(context).nameOfUser;
+                      String userEmail = S.of(context).hisEmail;
+
+                      if (user != null) {
+                        if (snapshot.hasData && snapshot.data!.exists) {
+                          final data = snapshot.data!.data() as Map<String, dynamic>?;
+                          userName = data?['name'] as String? ?? user.displayName ?? S.of(context).user;
+                          userEmail = data?['email'] as String? ?? user.email ?? S.of(context).noEmail;
+                        } else if (user.displayName != null || user.email != null) {
+                          userName = user.displayName ?? S.of(context).user;
+                          userEmail = user.email ?? S.of(context).noEmail;
+                        }
+                      }
+
+                      return ListTile(
+                        leading: CircleAvatar(
+                          radius: 30.r,
+                          backgroundImage: NetworkImage("https://wallpapers.com/images/hd/generic-male-avatar-icon-piiktqtfffyzulft.jpg"),
+                        ),
+                        title: Text(userName , style: TextStyle(
+                          fontWeight: FontWeightManager.bold,
+                          color: ColorManager.primaryLight,
+                        ),),
+                        subtitle: Text(userEmail, style: TextStyle(
+                          fontWeight: FontWeightManager.regular,
+                          color: ColorManager.primaryLight,
+                          fontSize: FontSize.s16,
+                        ),),
+                        trailing: IconButton(onPressed: (){}, icon: Icon(Icons.settings)),
+                      );
+                    },
                   ),
                 ),
               ),
@@ -70,17 +90,17 @@ class MyProfile extends StatelessWidget {
                   child: Column(
                     spacing: AppPadding.p14,
                     children: [
-                      _buildTile(Icons.location_on, "Address"),
+                      _buildTile(Icons.location_on, S.of(context).address),
                       Divider(height: 1.h, thickness: 0.3.h, color: ColorManager.lighterGrayLight, indent: 12.w,),
-                      _buildTile(Icons.payment_rounded, "Payment Method"),
+                      _buildTile(Icons.payment_rounded, S.of(context).paymentMethod),
                       Divider(height: 1.h, thickness: 0.3.h, color: ColorManager.lighterGrayLight, indent: 12.w,),
-                      _buildTile(Icons.confirmation_num, "Voucher"),
+                      _buildTile(Icons.confirmation_num, S.of(context).voucher),
                       Divider(height: 1.h, thickness: 0.3.h, color: ColorManager.lighterGrayLight, indent: 12.w,),
-                      _buildTile(Icons.favorite, "My Wishlist"),
+                      _buildTile(Icons.favorite, S.of(context).myWishlist),
                       Divider(height: 1.h, thickness: 0.3.h, color: ColorManager.lighterGrayLight, indent: 12.w,),
-                      _buildTile(Icons.star, "Rate this app"),
+                      _buildTile(Icons.star, S.of(context).rateThisApp),
                       Divider(height: 1.h, thickness: 0.3.h, color: ColorManager.lighterGrayLight, indent: 12.w,),
-                      _buildTile(Icons.logout, "Log out"),
+                      _buildLogoutTile(context, authService),
                     ],
                   ),
                 ),
@@ -99,6 +119,55 @@ class MyProfile extends StatelessWidget {
       ),),
       trailing: Icon(Icons.arrow_forward_ios , size: AppSize.s30, color: ColorManager.lighterGrayLight,),
       onTap: (){},
+    );
+  }
+
+  Widget _buildLogoutTile(BuildContext context, FirebaseAuthServices authService) {
+    return ListTile(
+      leading: Icon(Icons.logout, size: AppSize.s30, color: Colors.red,),
+      title: Text(S.of(context).logOut, style: TextStyle(
+        fontSize: FontSize.s18,
+        fontWeight: FontWeightManager.regular,
+        color: Colors.red,
+      ),),
+      trailing: Icon(Icons.arrow_forward_ios , size: AppSize.s30, color: ColorManager.lighterGrayLight,),
+      onTap: () async {
+        // Show confirmation dialog
+        final shouldLogout = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(S.of(context).logout),
+            content: Text(S.of(context).areYouSureYouWantToLogout),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text(S.of(context).cancel),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                child: Text(S.of(context).logout),
+              ),
+            ],
+          ),
+        );
+
+        if (shouldLogout == true) {
+          try {
+            await authService.signOut();
+            // Navigate to login screen
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              Routes.loginRoute,
+              (route) => false,
+            );
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('${S.of(context).cancel}: $e')),
+            );
+          }
+        }
+      },
     );
   }
 }

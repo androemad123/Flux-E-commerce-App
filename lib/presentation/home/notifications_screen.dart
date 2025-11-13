@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:depi_graduation/presentation/resources/font_manager.dart';
+import 'package:depi_graduation/generated/l10n.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
@@ -70,35 +71,35 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
   }
 
-  Future<String> _getCartName(String cartId) async {
+  Future<String> _getCartName(String cartId, BuildContext context) async {
     if (_cartNames.containsKey(cartId)) {
       return _cartNames[cartId]!;
     }
     try {
       final doc = await _firestore.collection('sharedCarts').doc(cartId).get();
       if (doc.exists) {
-        final name = doc.data()?['name'] as String? ?? 'Shared Cart';
+        final name = doc.data()?['name'] as String? ?? S.of(context).sharedCart;
         _cartNames[cartId] = name;
         return name;
       }
-      return 'Shared Cart';
+      return S.of(context).sharedCart;
     } catch (e) {
-      return 'Shared Cart';
+      return S.of(context).sharedCart;
     }
   }
 
-  String _formatTime(DateTime dateTime) {
+  String _formatTime(DateTime dateTime, BuildContext context) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
 
     if (difference.inDays > 0) {
-      return '${difference.inDays}d ago';
+      return '${difference.inDays}${S.of(context).d} ${S.of(context).ago}';
     } else if (difference.inHours > 0) {
-      return '${difference.inHours}h ago';
+      return '${difference.inHours}${S.of(context).h} ${S.of(context).ago}';
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}m ago';
+      return '${difference.inMinutes}${S.of(context).m} ${S.of(context).ago}';
     } else {
-      return 'Just now';
+      return S.of(context).justNow;
     }
   }
 
@@ -123,7 +124,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          "Notifications",
+          S.of(context).notifications,
           style: TextStyle(
             fontFamily: FontConstants.fontFamily,
             fontWeight: FontWeightManager.bold,
@@ -144,7 +145,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         listener: (context, state) {
           if (state is InvitationUpdated) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Invitation updated')),
+              SnackBar(content: Text(S.of(context).invitationUpdated)),
             );
             _loadInvitations();
           } else if (state is InvitationsError) {
@@ -166,7 +167,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             if (invitations.isEmpty) {
               return Center(
                 child: Text(
-                  "No notifications yet",
+                  S.of(context).noNotifications,
                   style: TextStyle(
                     fontFamily: FontConstants.fontFamily,
                     fontWeight: FontWeightManager.regular,
@@ -186,7 +187,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 itemBuilder: (context, index) {
                   final invitation = invitations[index];
                   return FutureBuilder<Map<String, String>>(
-                    future: _buildInvitationData(invitation),
+                    future: _buildInvitationData(invitation, context),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return const SizedBox.shrink();
@@ -249,7 +250,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                         onPressed: () =>
                                             _handleRejectInvitation(invitation),
                                         child: Text(
-                                          'Reject',
+                                          S.of(context).reject,
                                           style: TextStyle(
                                             color: Colors.red.shade300,
                                           ),
@@ -259,7 +260,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                         onPressed: () =>
                                             _handleAcceptInvitation(invitation),
                                         child: Text(
-                                          'Accept',
+                                          S.of(context).accept,
                                           style: TextStyle(
                                             color: Colors.green.shade300,
                                           ),
@@ -285,43 +286,43 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Error: ${state.message}',
+                    '${S.of(context).error} ${state.message}',
                     style: const TextStyle(color: Colors.red),
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: _loadInvitations,
-                    child: const Text('Retry'),
+                    child: Text(S.of(context).retry),
                   ),
                 ],
               ),
             );
           }
 
-          return const Center(child: Text('No data'));
+          return Center(child: Text(S.of(context).noData));
         },
       ),
     );
   }
 
   Future<Map<String, String>> _buildInvitationData(
-      Invitation invitation) async {
+      Invitation invitation, BuildContext context) async {
     final senderName = await _getSenderName(invitation.senderEmail);
 
     if (invitation.invitationType == 'sharedCart' &&
         invitation.sharedCartId != null) {
-      final cartName = await _getCartName(invitation.sharedCartId!);
+      final cartName = await _getCartName(invitation.sharedCartId!, context);
       return {
-        'title': 'Cart shared with you',
-        'subtitle': '$senderName invited you to join "$cartName".',
-        'time': _formatTime(invitation.sentAt),
+        'title': S.of(context).cartSharedWithYou,
+        'subtitle': '$senderName ${S.of(context).invitedYouToJoin} "$cartName".',
+        'time': _formatTime(invitation.sentAt, context),
       };
     }
 
     return {
-      'title': 'New invitation',
-      'subtitle': '$senderName sent you an invitation.',
-      'time': _formatTime(invitation.sentAt),
+      'title': S.of(context).newInvitation,
+      'subtitle': '$senderName ${S.of(context).sentYouAnInvitation}',
+      'time': _formatTime(invitation.sentAt, context),
     };
   }
 }

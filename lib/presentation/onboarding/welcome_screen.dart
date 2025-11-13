@@ -1,5 +1,6 @@
 import 'package:depi_graduation/presentation/resources/color_manager.dart';
 import 'package:depi_graduation/presentation/resources/font_manager.dart';
+import 'package:depi_graduation/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -36,7 +37,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               SizedBox(height: 420.h), // Adjust height as needed
               Center(
                 child: Text(
-                  'Welcome to Flux Store',
+                  S.of(context).welcomeToFluxStore,
                   style: TextStyle(
                     fontSize: FontSize.s24,
                     fontWeight: FontWeightManager.bold,
@@ -46,7 +47,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
               SizedBox(height: 20.h),
               Text(
-                'The home for a fashionista',
+                S.of(context).theHomeForAFashionista,
                 style: TextStyle(
                   fontSize: FontSize.s16,
                   fontWeight: FontWeightManager.regular,
@@ -69,7 +70,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   Navigator.pushNamed(
                       context, '/onboardingRoute'); // Replace with your route
                 },
-                child: Text('Get Started',
+                child: Text(S.of(context).getStarted,
                     style: TextStyle(
                       fontSize: FontSize.s16,
                       fontWeight: FontWeightManager.regular,

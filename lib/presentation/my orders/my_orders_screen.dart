@@ -71,8 +71,8 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     _buildFilterButton(s.pending, OrderStatus.pending),
-                    _buildFilterButton('Processing', OrderStatus.processing),
-                    _buildFilterButton('Shipped', OrderStatus.shipped),
+                    _buildFilterButton(s.processing, OrderStatus.processing),
+                    _buildFilterButton(s.shipped, OrderStatus.shipped),
                   ],
                 ),
                 SizedBox(

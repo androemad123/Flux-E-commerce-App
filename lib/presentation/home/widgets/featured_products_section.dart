@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../app/BLoC/ProductBLoC/ProductBLoC.dart';
 import '../../../routing/routes.dart';
+import '../../../generated/l10n.dart';
 import '../../resources/styles_manager.dart';
 import 'product_card.dart';
 
@@ -60,14 +61,14 @@ class FeaturedProductsSection extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Featured Products",
+                    S.of(context).featuredProducts,
                     style: boldStyle(
                       fontSize: FontSize.s14,
                       color: ColorManager.darkGrayLight,
                     ),
                   ),
                   Text(
-                    "Show all",
+                    S.of(context).showAll,
                     style: regularStyle(
                       fontSize: FontSize.s12,
                       color: ColorManager.lightGrayLight,
@@ -80,7 +81,7 @@ class FeaturedProductsSection extends StatelessWidget {
             SizedBox(
               height: 277.h,
               child: featuredProducts.isEmpty
-                  ? _buildEmptyState()
+                  ? _buildEmptyState(context)
                   : ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: featuredProducts.length,
@@ -107,12 +108,12 @@ class FeaturedProductsSection extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
     return Center(
       child: Padding(
         padding: EdgeInsets.all(AppPadding.p12),
         child: Text(
-          "No featured products found",
+          S.of(context).noFeaturedProductsFound,
           style: regularStyle(
             color: ColorManager.lightGrayLight,
             fontSize: FontSize.s12,

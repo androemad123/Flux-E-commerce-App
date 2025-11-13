@@ -5,6 +5,7 @@ import 'package:depi_graduation/data/models/cart_item.dart';
 import 'package:depi_graduation/presentation/resources/color_from_string_helper.dart';
 import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:depi_graduation/routing/routes.dart';
+import 'package:depi_graduation/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,10 +21,10 @@ class ProductsCartScreen extends StatelessWidget {
           backgroundColor: Colors.white,
           body: CustomScrollView(
             slivers: [
-              const SliverAppBar(
+              SliverAppBar(
                 floating: true,
                 title: Text(
-                  "Your Cart",
+                  S.of(context).yourCart,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 centerTitle: true,
@@ -33,7 +34,7 @@ class ProductsCartScreen extends StatelessWidget {
                   hasScrollBody: false,
                   child: Center(
                     child: Text(
-                      "Your cart is empty",
+                      S.of(context).yourCartIsEmpty,
                       style: TextStyle(
                         fontSize: 18,
                         fontFamily: FontConstants.fontFamily,
@@ -80,7 +81,7 @@ class ProductsCartScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "Proceed to checkout",
+                    S.of(context).proceedToCheckout,
                     style: TextStyle(
                       fontSize: 18,
                       fontFamily: FontConstants.fontFamily,
@@ -92,7 +93,7 @@ class ProductsCartScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
-                        "Total: ${state.subtotal.toStringAsFixed(2)}",
+                        "${S.of(context).total} ${state.subtotal.toStringAsFixed(2)}",
                         style: TextStyle(
                           fontSize: 14,
                           color: Theme.of(context).colorScheme.onPrimary,

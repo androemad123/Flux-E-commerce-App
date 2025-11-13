@@ -19,6 +19,7 @@ import 'package:depi_graduation/presentation/product%20details/subScreens/starsR
 import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:depi_graduation/presentation/resources/value_manager.dart';
 import 'package:depi_graduation/routing/routes.dart';
+import 'package:depi_graduation/generated/l10n.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -71,20 +72,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
           if (carts.isEmpty) {
             return AlertDialog(
-              title: const Text('No Shared Carts'),
-              content: const Text(
-                  'You need to create or join a shared cart first. Go to Shop Together to create one.'),
+              title: Text(S.of(context).noSharedCarts),
+              content: Text(S.of(context).youNeedToCreateOrJoinSharedCart),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('OK'),
+                  child: Text(S.of(context).ok),
                 ),
               ],
             );
           }
 
           return AlertDialog(
-            title: const Text('Select Shared Cart'),
+            title: Text(S.of(context).selectSharedCart),
             content: SizedBox(
               width: double.maxFinite,
               child: ListView.builder(
@@ -96,7 +96,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   return ListTile(
                     title: Text(cart.name),
                     subtitle: Text(
-                      isOwner ? 'Owner' : 'Collaborator',
+                      isOwner ? S.of(context).owner : S.of(context).collaborator,
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[600],
@@ -114,7 +114,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
+                child: Text(S.of(context).cancel),
               ),
             ],
           );
@@ -140,7 +140,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          "${product.ProductName} added to ${cart.name}",
+          "${product.ProductName} ${S.of(context).addedTo} ${cart.name}",
           style: TextStyle(
             fontFamily: FontConstants.fontFamily,
           ),
@@ -300,7 +300,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      "${product.ProductName} added to cart",
+                                      "${product.ProductName} ${S.of(context).addedTo} cart",
                                       style: TextStyle(
                                         fontFamily: FontConstants.fontFamily,
                                       ),
@@ -308,7 +308,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     behavior: SnackBarBehavior.floating,
                                     duration: const Duration(seconds: 2),
                                     action: SnackBarAction(
-                                      label: "View Cart",
+                                      label: S.of(context).viewCart,
                                       onPressed: () {
                                         Navigator.pushNamed(
                                             context, Routes.cartRoute);
@@ -329,7 +329,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    "Add to Cart",
+                                    S.of(context).addToCart,
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontFamily: FontConstants.fontFamily,
@@ -375,7 +375,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             );
           }
 
-          return const Center(child: Text("Loading product..."));
+          return Center(child: Text(S.of(context).loadingProduct));
         },
       ),
     );

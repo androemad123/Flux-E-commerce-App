@@ -31,11 +31,15 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // Initialize LanguageProvider and load saved locale
+  final languageProvider = LanguageProvider();
+  await languageProvider.loadLocale();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => LanguageProvider()),
+        ChangeNotifierProvider.value(value: languageProvider),
       ],
       child: RepositoryProvider(
         create: (_) => OrderRepository(),
