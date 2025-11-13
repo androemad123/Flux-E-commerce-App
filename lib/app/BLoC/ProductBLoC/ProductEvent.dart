@@ -23,28 +23,49 @@ class LoadSpecificProduct extends ProductEvent {
   List<Object?> get props => [field, isEqualTo];
 }
 
+class LoadCategoryProduct extends ProductEvent {
+  final String ProductCategotry;
+  LoadCategoryProduct({required this.ProductCategotry});
+
+  @override
+  List<Object?> get props => [ProductCategotry];
+}
+
 ////////////////////////////////
 class AddProduct extends ProductEvent {
   final String ProductName;
   final String ProductDescription;
   final List<String> ProductImageURL;
-  // String ProductCategotry;
+  final String? ProductCategotry;
   final double ProductPrice;
   final int ProductQuantity;
-  AddProduct(
-      {required this.ProductName,
-      required this.ProductDescription,
-      // required this.ProductCategotry,
-      required this.ProductPrice,
-      required this.ProductImageURL,
-      required this.ProductQuantity});
+  final List<String>? ProductColors;
+  final List<String>? ProductSizes;
+  final String? ProductID; // Optional, will be generated if not provided
+  
+  AddProduct({
+    required this.ProductName,
+    required this.ProductDescription,
+    this.ProductCategotry,
+    required this.ProductPrice,
+    required this.ProductImageURL,
+    required this.ProductQuantity,
+    this.ProductColors,
+    this.ProductSizes,
+    this.ProductID,
+  });
+  
   @override
   List<Object?> get props => [
         ProductName,
         ProductDescription,
         ProductImageURL,
+        ProductCategotry,
         ProductPrice,
-        ProductQuantity
+        ProductQuantity,
+        ProductColors,
+        ProductSizes,
+        ProductID,
       ];
 }
 

@@ -3,10 +3,10 @@ import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:flutter/material.dart';
 
 class simialProducts extends StatefulWidget {
-  List<String> productNames;
-  List<String> similarProductPrices;
-  String? productId;
-  simialProducts(
+  final List<String> productNames;
+  final List<String> similarProductPrices;
+  final String? productId;
+  const simialProducts(
       {super.key,
       this.productId,
       required this.productNames,

@@ -2,11 +2,11 @@ import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:flutter/material.dart';
 
 class drawIndicators extends StatefulWidget {
-  int i;
-  List<int> nums;
-  List<double> percentages;
+  final int i;
+  final List<int> nums;
+  final List<double> percentages;
 
-  drawIndicators(
+  const drawIndicators(
       {super.key,
       required this.i,
       required this.nums,

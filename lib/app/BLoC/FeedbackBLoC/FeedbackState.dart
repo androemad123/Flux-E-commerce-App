@@ -49,11 +49,11 @@ class ErrorState extends FeedbackState {
 }
 
 class FeedbackAdded extends FeedbackState {
-  final String feedbackID;
-  FeedbackAdded({required this.feedbackID});
+  final String docID;
+  FeedbackAdded({required this.docID});
 
   @override
-  List<Object?> get props => [feedbackID];
+  List<Object?> get props => [docID];
 }
 
 class FeedbackUpdated extends FeedbackState {}

@@ -50,7 +50,7 @@ class _ProductdiscriptionState extends State<Productdiscription> {
                 child: Text(
                   prod.ProductDescription,
                   style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 14,
                       fontFamily: FontConstants.fontFamily,
                       color: Theme.of(context).primaryColor),
                 ),

@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Product_Name_Price extends StatefulWidget {
-  String productID;
+  final String productID;
 
-  Product_Name_Price({
+  const Product_Name_Price({
     super.key,
     required this.productID,
   });

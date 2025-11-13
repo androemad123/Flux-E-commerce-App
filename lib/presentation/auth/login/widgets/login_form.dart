@@ -4,7 +4,6 @@ import 'package:depi_graduation/presentation/resources/color_manager.dart';
 import 'package:depi_graduation/presentation/resources/styles_manager.dart';
 import 'package:depi_graduation/presentation/widgets/app_text_button.dart';
 import 'package:depi_graduation/presentation/widgets/app_text_field.dart';
-import 'package:depi_graduation/routing/app_router.dart';
 import 'package:depi_graduation/routing/routes.dart';
 import 'package:depi_graduation/core/methods/validators.dart';
 import 'package:flutter/material.dart';

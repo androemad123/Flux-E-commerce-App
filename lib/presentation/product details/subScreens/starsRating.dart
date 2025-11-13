@@ -2,15 +2,23 @@ import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:flutter/material.dart';
 
 class starsRating extends StatefulWidget {
-  int rate;
-  int numOfRatings;
-  starsRating({super.key, required this.rate, required this.numOfRatings});
+  final int rate;
+  final int numOfRatings;
+  const starsRating({super.key, required this.rate, required this.numOfRatings});
 
   @override
   State<starsRating> createState() => _starsRatingState();
 }
 
 class _starsRatingState extends State<starsRating> {
+  late int currentRate;
+  
+  @override
+  void initState() {
+    super.initState();
+    currentRate = widget.rate;
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -22,11 +30,11 @@ class _starsRatingState extends State<starsRating> {
               constraints: BoxConstraints(),
               onPressed: () {
                 setState(() {
-                  widget.rate = index + 1;
+                  currentRate = index + 1;
                 });
               },
-              icon: Icon(index < widget.rate ? Icons.star : Icons.star_border),
-              color: index < widget.rate
+              icon: Icon(index < currentRate ? Icons.star : Icons.star_border),
+              color: index < currentRate
                   ? Theme.of(context).colorScheme.secondary
                   : Theme.of(context).primaryColor,
             );

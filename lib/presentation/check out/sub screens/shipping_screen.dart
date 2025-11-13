@@ -1,3 +1,6 @@
+import 'package:depi_graduation/app/BLoC/CheckoutBLoC/checkout_bloc.dart';
+import 'package:depi_graduation/app/BLoC/CheckoutBLoC/checkout_event.dart';
+import 'package:depi_graduation/data/models/delivery_address_model.dart';
 import 'package:depi_graduation/presentation/check%20out/widgets/method_tile.dart';
 import 'package:depi_graduation/presentation/resources/color_manager.dart';
 import 'package:depi_graduation/presentation/resources/font_manager.dart';
@@ -6,6 +9,7 @@ import 'package:depi_graduation/presentation/resources/value_manager.dart';
 import 'package:depi_graduation/presentation/widgets/app_text_button.dart';
 import 'package:depi_graduation/presentation/widgets/app_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ShippingScreen extends StatefulWidget {
@@ -19,7 +23,6 @@ class ShippingScreen extends StatefulWidget {
 class _ShippingScreenState extends State<ShippingScreen> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
-  final countryController = TextEditingController();
   final streetNameController = TextEditingController();
   final cityController = TextEditingController();
   final stateController = TextEditingController();
@@ -34,7 +37,6 @@ class _ShippingScreenState extends State<ShippingScreen> {
   void dispose() {
     firstNameController.dispose();
     lastNameController.dispose();
-    countryController.dispose();
     streetNameController.dispose();
     cityController.dispose();
     stateController.dispose();
@@ -120,7 +122,6 @@ class _ShippingScreenState extends State<ShippingScreen> {
               onChanged: (value) {
                 setState(() {
                   selectedCountry = value!;
-                  countryController.text = value;
                 });
               },
               validator: (value) {
@@ -273,7 +274,41 @@ class _ShippingScreenState extends State<ShippingScreen> {
             ),
         
             AppTextButton(
-              onPressed: widget.goNext,
+              onPressed: () {
+                if (_formKey.currentState?.validate() != true) {
+                  return;
+                }
+                if (selectedMethodIndex == -1) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please select a shipping method.'),
+                    ),
+                  );
+                  return;
+                }
+
+                final selectedMethod = methods[selectedMethodIndex];
+                final address = DeliveryAddress(
+                  firstName: firstNameController.text.trim(),
+                  lastName: lastNameController.text.trim(),
+                  phoneNumber: phoneNumberController.text.trim(),
+                  country: selectedCountry,
+                  city: cityController.text.trim(),
+                  state: stateController.text.trim(),
+                  street: streetNameController.text.trim(),
+                  zipCode: zipCodeController.text.trim(),
+                );
+
+                context.read<CheckoutBloc>().add(
+                      CheckoutShippingSubmitted(
+                        address: address,
+                        shippingMethod: selectedMethod['deliveryMethod'] as String,
+                        shippingFee: (selectedMethod['price'] as num).toDouble(),
+                      ),
+                    );
+
+                widget.goNext();
+              },
               text: 'Continue Payment',
               width: double.infinity,
               color: Colors.black,

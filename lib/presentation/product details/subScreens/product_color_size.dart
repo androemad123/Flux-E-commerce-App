@@ -2,29 +2,63 @@ import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:flutter/material.dart';
 
 class product_color_size extends StatefulWidget {
-  int currentImage;
-  List<bool> currentColor;
-  List<bool> CurrentSize;
+  final List<Color> clrs;
+  final List<String> txt;
+  final ValueChanged<int>? onColorChanged;
+  final ValueChanged<int>? onSizeChanged;
+  final int? selectedColorIndex;
+  final int? selectedSizeIndex;
 
-  int selectedColor;
-  int selectedSize;
-  List<Color> clrs;
-  List<String> txt;
-  product_color_size(
-      {super.key,
-      required this.currentImage,
-      required this.currentColor,
-      required this.CurrentSize,
-      required this.selectedColor,
-      required this.selectedSize,
-      required this.clrs,
-      required this.txt});
+  const product_color_size({
+    super.key,
+    required this.clrs,
+    required this.txt,
+    this.onColorChanged,
+    this.onSizeChanged,
+    this.selectedColorIndex,
+    this.selectedSizeIndex,
+  });
 
   @override
   State<product_color_size> createState() => _product_color_sizeState();
 }
 
 class _product_color_sizeState extends State<product_color_size> {
+  int? selectedColorIndex;
+  int? selectedSizeIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedColorIndex =
+        _normalizeIndex(widget.selectedColorIndex, widget.clrs.length);
+    selectedSizeIndex =
+        _normalizeIndex(widget.selectedSizeIndex, widget.txt.length);
+  }
+
+  @override
+  void didUpdateWidget(covariant product_color_size oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.clrs != oldWidget.clrs ||
+        widget.selectedColorIndex != oldWidget.selectedColorIndex) {
+      selectedColorIndex =
+          _normalizeIndex(widget.selectedColorIndex, widget.clrs.length);
+    }
+    if (widget.txt != oldWidget.txt ||
+        widget.selectedSizeIndex != oldWidget.selectedSizeIndex) {
+      selectedSizeIndex =
+          _normalizeIndex(widget.selectedSizeIndex, widget.txt.length);
+    }
+  }
+
+  int? _normalizeIndex(int? index, int length) {
+    if (length == 0) return null;
+    if (index == null) return 0;
+    if (index < 0) return 0;
+    if (index >= length) return length - 1;
+    return index;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -46,31 +80,25 @@ class _product_color_sizeState extends State<product_color_size> {
               height: 10,
             ),
             Row(
-              children: List.generate(3, (index) {
+              children: List.generate(widget.clrs.length, (index) {
+                final isSelected = selectedColorIndex == index;
                 return IconButton.filled(
                   onPressed: () {
                     setState(() {
-                      if (widget.currentColor[index] == false) {
-                        for (int i = 0; i < widget.currentColor.length; i++) {
-                          widget.currentColor[i] = false;
-                        }
-                        widget.currentColor[index] = true;
-                        widget.selectedColor = index;
-                        widget.currentImage = 0;
-                      }
+                      selectedColorIndex = index;
                     });
+                    widget.onColorChanged?.call(index);
                   },
-                  iconSize: widget.currentColor[index] ? 40 : 35,
+                  iconSize: isSelected ? 40 : 35,
                   padding: EdgeInsets.all(0),
                   constraints: BoxConstraints(),
                   icon: Icon(
                     Icons.circle,
                   ),
                   style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(
-                          widget.currentColor[index]
-                              ? Theme.of(context).colorScheme.shadow
-                              : Theme.of(context).scaffoldBackgroundColor)),
+                      backgroundColor: WidgetStateProperty.all(isSelected
+                          ? Theme.of(context).colorScheme.shadow
+                          : Theme.of(context).scaffoldBackgroundColor)),
                   color: widget.clrs[index],
                 );
               }),
@@ -95,25 +123,20 @@ class _product_color_sizeState extends State<product_color_size> {
               height: 10,
             ),
             Row(
-              children: List.generate(3, (index) {
+              children: List.generate(widget.txt.length, (index) {
+                final isSelected = selectedSizeIndex == index;
                 return CircleAvatar(
                   radius: 18,
                   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                   child: TextButton(
                     onPressed: () {
                       setState(() {
-                        if (widget.CurrentSize[index] == false) {
-                          for (int i = 0; i < widget.CurrentSize.length; i++) {
-                            widget.CurrentSize[i] = false;
-                          }
-                          widget.CurrentSize[index] = true;
-                          widget.selectedSize = index;
-                          widget.currentImage = 0;
-                        }
+                        selectedSizeIndex = index;
                       });
+                      widget.onSizeChanged?.call(index);
                     },
                     style: TextButton.styleFrom(
-                      backgroundColor: widget.CurrentSize[index]
+                      backgroundColor: isSelected
                           ? Theme.of(context).colorScheme.onSurface
                           : Colors.transparent,
                       foregroundColor: Colors.transparent,
@@ -122,7 +145,7 @@ class _product_color_sizeState extends State<product_color_size> {
                       widget.txt[index],
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: widget.CurrentSize[index]
+                          color: isSelected
                               ? Theme.of(context).scaffoldBackgroundColor
                               : Theme.of(context).primaryColor),
                     ),

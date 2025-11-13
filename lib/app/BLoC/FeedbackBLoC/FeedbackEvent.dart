@@ -18,37 +18,39 @@ class AddFeedback extends FeedbackEvent {
   final String productID;
   final int rating;
   final String review;
+  final String? orderId;
 
   AddFeedback({
     required this.productID,
     required this.rating,
     required this.review,
+    this.orderId,
   });
   @override
-  List<Object?> get props => [productID,rating, review];
+  List<Object?> get props => [productID, rating, review, orderId];
 }
 
 class DeleteFeedback extends FeedbackEvent {
-  final String FeedbackID;
-  DeleteFeedback({required this.FeedbackID});
+  final String docID;
+  DeleteFeedback({required this.docID});
   @override
-  List<Object?> get props => [FeedbackID];
+  List<Object?> get props => [docID];
 }
 
 class UserEditFeedback extends FeedbackEvent {
-  final String FeedbackID;
+  final String docID;
   final String ProductID;
   final int rating;
   final String review;
 
   UserEditFeedback({
-    required this.FeedbackID,
+    required this.docID,
     required this.ProductID,
     required this.rating,
     required this.review,
   });
   @override
-  List<Object?> get props => [rating, review];
+  List<Object?> get props => [docID, ProductID, rating, review];
 }
 
 class LoadSpecificFeedback extends FeedbackEvent {
