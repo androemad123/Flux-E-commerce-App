@@ -1,9 +1,11 @@
 import 'package:depi_graduation/app/BLoC/CartBLoC/cart_bloc.dart';
 import 'package:depi_graduation/app/BLoC/CartBLoC/cart_event.dart';
 import 'package:depi_graduation/app/BLoC/FeedbackBLoC/FeedbackBLoC.dart';
+import 'package:depi_graduation/app/BLoC/InvitaionBLoC/invitation_bloc.dart';
 import 'package:depi_graduation/app/BLoC/OrderBLoC/orders_bloc.dart';
 import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductBLoC.dart';
 import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductEvent.dart';
+import 'package:depi_graduation/app/BLoC/SharedCartBLoC/shared_cart_bloc.dart';
 import 'package:depi_graduation/core/di/setup_service_locator.dart';
 import 'package:depi_graduation/firebase_options.dart';
 import 'package:depi_graduation/routing/app_router.dart';
@@ -53,6 +55,13 @@ void main() async {
             BlocProvider<FeedbackBLoC>(
               create: (_) => FeedbackBLoC(),
             ),
+            BlocProvider<SharedCartBloc>(
+              create: (_) => SharedCartBloc(),
+            ),
+            BlocProvider<InvitationsBloc>(
+              create: (_) => InvitationsBloc(),
+            ),
+
           ],
           child: FluxApp(appRouter: AppRouter()),
         ),

@@ -26,6 +26,7 @@ class CheckoutState extends Equatable {
     this.userId,
     this.order,
     this.errorMessage,
+    this.sharedCartId,
   });
 
   final CheckoutStatus status;
@@ -37,6 +38,7 @@ class CheckoutState extends Equatable {
   final String? userId;
   final OrderModel? order;
   final String? errorMessage;
+  final String? sharedCartId;
 
   double get subtotal =>
       cartItems.fold(0, (total, item) => total + item.subtotal);
@@ -67,6 +69,7 @@ class CheckoutState extends Equatable {
     String? userId,
     OrderModel? order,
     String? errorMessage,
+    String? sharedCartId,
     bool clearError = false,
   }) {
     return CheckoutState(
@@ -79,6 +82,7 @@ class CheckoutState extends Equatable {
       userId: userId ?? this.userId,
       order: order ?? this.order,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
+      sharedCartId: sharedCartId ?? this.sharedCartId,
     );
   }
 
@@ -99,5 +103,6 @@ class CheckoutState extends Equatable {
         userId,
         order,
         errorMessage,
+        sharedCartId,
       ];
 }

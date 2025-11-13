@@ -3,6 +3,12 @@ import 'package:depi_graduation/app/BLoC/CartBLoC/cart_event.dart';
 import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductBLoC.dart';
 import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductEvent.dart';
 import 'package:depi_graduation/app/BLoC/ProductBLoC/ProductState.dart';
+import 'package:depi_graduation/app/BLoC/SharedCartBLoC/shared_cart_bloc.dart';
+import 'package:depi_graduation/app/BLoC/SharedCartBLoC/shared_cart_event.dart';
+import 'package:depi_graduation/app/BLoC/SharedCartBLoC/shared_cart_state.dart';
+import 'package:depi_graduation/data/models/ProductModel.dart';
+import 'package:depi_graduation/data/models/shared_cart.dart';
+import 'package:depi_graduation/data/models/shared_cart_item.dart';
 import 'package:depi_graduation/presentation/product%20details/subScreens/ProductName&Price.dart';
 import 'package:depi_graduation/presentation/product%20details/subScreens/imageSlider.dart';
 import 'package:depi_graduation/presentation/product%20details/subScreens/productDetailsAppBar.dart';
@@ -13,6 +19,7 @@ import 'package:depi_graduation/presentation/product%20details/subScreens/starsR
 import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:depi_graduation/presentation/resources/value_manager.dart';
 import 'package:depi_graduation/routing/routes.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,11 +42,113 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   bool isFavourite = false;
   String? _selectedColor;
   String? _selectedSize;
+  final _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
     super.initState();
     context.read<ProductBLoC>().add(LoadProduct(ProductID: widget.productId));
+    // Load shared carts for the user
+    final userId = _auth.currentUser?.uid;
+    if (userId != null) {
+      context.read<SharedCartBloc>().add(LoadSharedCarts(userId));
+    }
+  }
+
+  void _showSharedCartDialog(Product product) {
+    showDialog(
+      context: context,
+      builder: (context) => BlocBuilder<SharedCartBloc, SharedCartState>(
+        builder: (context, state) {
+          List<SharedCart> carts = [];
+          if (state is SharedCartsLoaded) {
+            carts = state.carts;
+          } else if (state is SharedCartLoading) {
+            return const AlertDialog(
+              content: Center(child: CircularProgressIndicator()),
+            );
+          }
+
+          if (carts.isEmpty) {
+            return AlertDialog(
+              title: const Text('No Shared Carts'),
+              content: const Text(
+                  'You need to create or join a shared cart first. Go to Shop Together to create one.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          }
+
+          return AlertDialog(
+            title: const Text('Select Shared Cart'),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: carts.length,
+                itemBuilder: (context, index) {
+                  final cart = carts[index];
+                  final isOwner = cart.owner == _auth.currentUser?.uid;
+                  return ListTile(
+                    title: Text(cart.name),
+                    subtitle: Text(
+                      isOwner ? 'Owner' : 'Collaborator',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                    onTap: () {
+                      _addToSharedCart(cart, product);
+                      Navigator.pop(context);
+                    },
+                  );
+                },
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  void _addToSharedCart(SharedCart cart, Product product) {
+    final userId = _auth.currentUser?.uid;
+    if (userId == null) return;
+
+    final item = SharedCartItem(
+      productId: product.ProductID,
+      quantity: 1,
+      addedBy: userId,
+    );
+
+    context.read<SharedCartBloc>().add(
+          AddItemToSharedCart(cartId: cart.id, item: item),
+        );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          "${product.ProductName} added to ${cart.name}",
+          style: TextStyle(
+            fontFamily: FontConstants.fontFamily,
+          ),
+        ),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -150,13 +259,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               Productdiscription(productID: product.ProductID),
                               const SizedBox(height: 5),
                               const Divider(thickness: 0.1, height: 0.5),
-                              const Productreviews(
-                                numOfRatings: 83,
-                                ratingNumber: "4.9",
-                                numOfReviews: 47,
-                                nums: [5, 4, 3, 2, 1],
-                                percentages: [.80, .12, .05, .03, 0],
-                              ),
+                              Productreviews(productId: product.ProductID),
                               const SizedBox(height: 30),
                             ],
                           ),
@@ -166,72 +269,105 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                 ),
 
-                // ✅ Add button at bottom
+                // ✅ Add buttons at bottom
                 SliverToBoxAdapter(
                   child: Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 60.h,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.onSurface,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        onPressed: () {
-                          context.read<CartBloc>().add(
-                                CartItemAdded(
-                                  product: product,
-                                  selectedColor: _selectedColor,
-                                  selectedSize: _selectedSize,
-                                ),
-                              );
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "${product.ProductName} added to cart",
-                                style: TextStyle(
-                                  fontFamily: FontConstants.fontFamily,
+                    child: Row(
+                      children: [
+                        // Add to Cart button
+                        Expanded(
+                          child: SizedBox(
+                            height: 60.h,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.onSurface,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
                                 ),
                               ),
-                              behavior: SnackBarBehavior.floating,
-                              duration: const Duration(seconds: 2),
-                              action: SnackBarAction(
-                                label: "View Cart",
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, Routes.cartRoute);
-                                },
+                              onPressed: () {
+                                context.read<CartBloc>().add(
+                                      CartItemAdded(
+                                        product: product,
+                                        selectedColor: _selectedColor,
+                                        selectedSize: _selectedSize,
+                                      ),
+                                    );
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      "${product.ProductName} added to cart",
+                                      style: TextStyle(
+                                        fontFamily: FontConstants.fontFamily,
+                                      ),
+                                    ),
+                                    behavior: SnackBarBehavior.floating,
+                                    duration: const Duration(seconds: 2),
+                                    action: SnackBarAction(
+                                      label: "View Cart",
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                            context, Routes.cartRoute);
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.shopping_bag,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    "Add to Cart",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontFamily: FontConstants.fontFamily,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          );
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.shopping_bag,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        // Add to Shared Cart button
+                        SizedBox(
+                          height: 60.h,
+                          width: 60.w,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            onPressed: () {
+                              _showSharedCartDialog(product);
+                            },
+                            child: Icon(
+                              Icons.group_add,
                               color: Theme.of(context).colorScheme.onPrimary,
                               size: 25,
                             ),
-                            const SizedBox(width: 10),
-                            Text(
-                              "Add to Cart",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontFamily: FontConstants.fontFamily,
-                                color: Theme.of(context).colorScheme.onPrimary,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
                 ),

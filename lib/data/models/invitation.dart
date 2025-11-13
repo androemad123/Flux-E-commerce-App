@@ -4,6 +4,8 @@ class Invitation {
   final String receiverEmail;
   final String status;
   final DateTime sentAt;
+  final String? sharedCartId; // For shared cart invitations
+  final String? invitationType; // 'sharedCart' or null for general
 
   Invitation({
     required this.id,
@@ -11,6 +13,8 @@ class Invitation {
     required this.receiverEmail,
     required this.status,
     required this.sentAt,
+    this.sharedCartId,
+    this.invitationType,
   });
 
   Map<String, dynamic> toMap() {
@@ -19,6 +23,8 @@ class Invitation {
       'receiverEmail': receiverEmail,
       'status': status,
       'sentAt': sentAt.toIso8601String(),
+      if (sharedCartId != null) 'sharedCartId': sharedCartId,
+      if (invitationType != null) 'invitationType': invitationType,
     };
   }
 
@@ -29,6 +35,8 @@ class Invitation {
       receiverEmail: map['receiverEmail'] ?? '',
       status: map['status'] ?? 'pending',
       sentAt: DateTime.parse(map['sentAt'] ?? DateTime.now().toIso8601String()),
+      sharedCartId: map['sharedCartId'],
+      invitationType: map['invitationType'],
     );
   }
 }

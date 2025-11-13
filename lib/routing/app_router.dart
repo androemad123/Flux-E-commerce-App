@@ -4,6 +4,7 @@ import 'package:depi_graduation/app/BLoC/CheckoutBLoC/checkout_event.dart';
 import 'package:depi_graduation/app_init.dart';
 import 'package:depi_graduation/core/di/setup_service_locator.dart';
 import 'package:depi_graduation/cubit/auth/auth_cubit.dart';
+import 'package:depi_graduation/data/models/cart_item.dart';
 import 'package:depi_graduation/data/repositories/order_repository.dart';
 import 'package:depi_graduation/presentation/Cart/ProductsCart.dart';
 import 'package:depi_graduation/presentation/auth/login/login_view.dart';
@@ -52,13 +53,34 @@ class AppRouter {
       case Routes.checkoutRoute:
         return MaterialPageRoute(
           builder: (context) {
-            final cartState = context.read<CartBloc>().state;
+            // Check if arguments were passed (from shared cart)
+            List<CartItem> items;
+            String? sharedCartId;
+            
+            if (settings.arguments != null) {
+              if (settings.arguments is Map) {
+                final args = settings.arguments as Map<String, dynamic>;
+                items = args['cartItems'] as List<CartItem>? ?? 
+                        context.read<CartBloc>().state.items;
+                sharedCartId = args['sharedCartId'] as String?;
+              } else if (settings.arguments is List<CartItem>) {
+                // Legacy support for direct list
+                items = settings.arguments as List<CartItem>;
+              } else {
+                items = context.read<CartBloc>().state.items;
+              }
+            } else {
+              // If no arguments, use items from CartBloc (regular cart)
+              items = context.read<CartBloc>().state.items;
+            }
+            
             return BlocProvider(
               create: (ctx) => CheckoutBloc(
                 orderRepository: ctx.read<OrderRepository>(),
+                sharedCartId: sharedCartId, // Pass shared cart ID to CheckoutBloc
               )..add(
                   CheckoutStarted(
-                    cartItems: cartState.items,
+                    cartItems: items,
                   ),
                 ),
               child: const CheckOutScreen(),

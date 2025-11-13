@@ -10,9 +10,10 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   CheckoutBloc({
     required OrderRepository orderRepository,
     FirebaseAuth? firebaseAuth,
+    String? sharedCartId,
   })  : _orderRepository = orderRepository,
         _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        super(const CheckoutState()) {
+        super(CheckoutState(sharedCartId: sharedCartId)) {
     on<CheckoutStarted>(_onCheckoutStarted);
     on<CheckoutShippingSubmitted>(_onShippingSubmitted);
     on<CheckoutPaymentMethodSelected>(_onPaymentSelected);

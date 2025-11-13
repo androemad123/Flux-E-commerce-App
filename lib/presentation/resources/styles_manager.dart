@@ -16,3 +16,6 @@ TextStyle regularStyle({required double fontSize, required Color color}) {
 TextStyle boldStyle({required double fontSize, required Color color}) {
   return _getTextStyle(fontSize, FontWeightManager.bold, color);
 }
+TextStyle semiBoldStyle({required double fontSize, required Color color}) {
+  return _getTextStyle(fontSize, FontWeightManager.semiBold, color);
+}

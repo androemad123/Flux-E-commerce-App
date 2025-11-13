@@ -5,6 +5,8 @@ import 'package:depi_graduation/app/BLoC/CheckoutBLoC/checkout_event.dart';
 import 'package:depi_graduation/app/BLoC/CheckoutBLoC/checkout_state.dart';
 import 'package:depi_graduation/app/BLoC/OrderBLoC/orders_bloc.dart';
 import 'package:depi_graduation/app/BLoC/OrderBLoC/orders_event.dart';
+import 'package:depi_graduation/app/BLoC/SharedCartBLoC/shared_cart_bloc.dart';
+import 'package:depi_graduation/app/BLoC/SharedCartBLoC/shared_cart_event.dart';
 import 'package:depi_graduation/presentation/resources/font_manager.dart';
 import 'package:depi_graduation/presentation/widgets/app_text_button.dart';
 import 'package:depi_graduation/routing/routes.dart';
@@ -22,7 +24,17 @@ class FinalCheckoutScreen extends StatelessWidget {
     return BlocConsumer<CheckoutBloc, CheckoutState>(
       listener: (context, state) {
         if (state.status == CheckoutStatus.success) {
+          // Clear regular cart
           context.read<CartBloc>().add(const CartCleared());
+          
+          // Clear shared cart if checkout was from a shared cart
+          if (state.sharedCartId != null) {
+            context.read<SharedCartBloc>().add(
+              ClearSharedCartItems(state.sharedCartId!),
+            );
+          }
+          
+          // Reload orders
           final userId = state.userId;
           if (userId != null && userId.isNotEmpty) {
             context

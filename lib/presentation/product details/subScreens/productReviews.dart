@@ -1,200 +1,261 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:depi_graduation/app/BLoC/FeedbackBLoC/FeedbackBLoC.dart';
+import 'package:depi_graduation/app/BLoC/FeedbackBLoC/FeedbackEvent.dart';
+import 'package:depi_graduation/app/BLoC/FeedbackBLoC/FeedbackState.dart';
+import 'package:depi_graduation/data/models/FeedbackModel.dart';
 import 'package:depi_graduation/presentation/product%20details/subScreens/drawIndicators.dart';
-import 'package:depi_graduation/presentation/product%20details/subScreens/drawProductReview.dart';
 import 'package:depi_graduation/presentation/resources/font_manager.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Feedback;
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Productreviews extends StatefulWidget {
-  final int numOfRatings;
-  final String ratingNumber;
-  final int numOfReviews;
-  final List<int> nums;
-  final List<double> percentages;
+  final String productId;
 
-  const Productreviews(
-      {super.key,
-      required this.numOfRatings,
-      required this.ratingNumber,
-      required this.numOfReviews,
-      required this.nums,
-      required this.percentages});
+  const Productreviews({super.key, required this.productId});
 
   @override
   State<Productreviews> createState() => _ProductreviewsState();
 }
 
 class _ProductreviewsState extends State<Productreviews> {
-  final addReview = new TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    context.read<FeedbackBLoC>().add(
+        LoadSpecificFeedback(field: 'ProductID', isEqualTo: widget.productId));
+  }
+
+  double _calculateAverageRating(List<Feedback> feedbacks) {
+    if (feedbacks.isEmpty) return 0.0;
+    final sum = feedbacks.fold<int>(
+        0, (total, feedback) => total + feedback.rating);
+    return sum / feedbacks.length;
+  }
+
+  List<double> _calculateRatingDistribution(List<Feedback> feedbacks) {
+    final distribution = List<int>.filled(5, 0);
+    for (final feedback in feedbacks) {
+      if (feedback.rating >= 1 && feedback.rating <= 5) {
+        distribution[feedback.rating - 1]++;
+      }
+    }
+    final total = feedbacks.length;
+    if (total == 0) return List.filled(5, 0.0);
+    return distribution.map((count) => count / total).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ExpansionTile(
-      tilePadding: EdgeInsets.zero,
-      shape: Border.all(color: Colors.transparent),
-      collapsedShape: Border.all(color: Colors.transparent),
-      title: Text(
-        "Reviews",
-        style: TextStyle(
-            fontFamily: FontConstants.fontFamily,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-            color: Theme.of(context).primaryColor),
-      ),
-      children: [
-        // the rating of the product
-        Card(
-          color: Theme.of(context).colorScheme.onPrimary,
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: [
-                Row(
+    return BlocBuilder<FeedbackBLoC, FeedbackState>(
+      builder: (context, state) {
+        List<Feedback> feedbacks = [];
+        if (state is SpecificFeedbacks) {
+          feedbacks = state.Feedbacks.whereType<Feedback>().toList();
+        } else if (state is AllFeedbacksLoaded) {
+          feedbacks = state.Feedbacks
+              .whereType<Feedback>()
+              .where((f) => f.ProductID == widget.productId)
+              .toList();
+        }
+
+        final averageRating = _calculateAverageRating(feedbacks);
+        final ratingDistribution = _calculateRatingDistribution(feedbacks);
+        final numOfRatings = feedbacks.length;
+        final numOfReviews = feedbacks.length;
+
+        return ExpansionTile(
+          tilePadding: EdgeInsets.zero,
+          shape: Border.all(color: Colors.transparent),
+          collapsedShape: Border.all(color: Colors.transparent),
+          title: Text(
+            "Reviews",
+            style: TextStyle(
+                fontFamily: FontConstants.fontFamily,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Theme.of(context).primaryColor),
+          ),
+          children: [
+            // the rating of the product
+            Card(
+              color: Theme.of(context).colorScheme.onPrimary,
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Column(
                   children: [
-                    // Rating number
-                    Text(
-                      "${widget.ratingNumber}",
-                      style: TextStyle(
-                          fontSize: 40,
-                          fontFamily: FontConstants.fontFamily,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).primaryColor),
-                    ),
-                    Text(
-                      " OUT OF 5",
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Theme.of(context).colorScheme.surface,
-                        fontFamily: FontConstants.fontFamily,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Spacer(),
-                    //Actual Rating of this product
-                    Column(
+                    Row(
                       children: [
+                        // Rating number
+                        Text(
+                          averageRating > 0
+                              ? averageRating.toStringAsFixed(1)
+                              : "0.0",
+                          style: TextStyle(
+                              fontSize: 40,
+                              fontFamily: FontConstants.fontFamily,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).primaryColor),
+                        ),
+                        Text(
+                          " OUT OF 5",
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Theme.of(context).colorScheme.surface,
+                            fontFamily: FontConstants.fontFamily,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Spacer(),
                         //Actual Rating of this product
-                        Row(
+                        Column(
                           children: [
-                            for (int i = 0; i < 5; i++)
-                              Icon(
-                                Icons.star,
-                                color: Theme.of(context).colorScheme.secondary,
-                                size: 20,
-                              ),
+                            //Actual Rating of this product
+                            Row(
+                              children: [
+                                for (int i = 0; i < 5; i++)
+                                  Icon(
+                                    i < averageRating.round()
+                                        ? Icons.star
+                                        : Icons.star_border,
+                                    color: Theme.of(context).colorScheme.secondary,
+                                    size: 20,
+                                  ),
+                              ],
+                            ),
+                            Text("$numOfRatings rating",
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.surface,
+                                  fontFamily: FontConstants.fontFamily,
+                                )),
                           ],
                         ),
-                        Text("${widget.numOfRatings} rating",
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.surface,
-                              // fontSize: 10,
-                              fontFamily: FontConstants.fontFamily,
-                            )),
                       ],
+                    ),
+                    // Indicators
+                    for (int i = 0; i < 5; i++)
+                      drawIndicators(
+                          i: i,
+                          nums: List.generate(5, (index) => 5 - index),
+                          percentages: ratingDistribution.reversed.toList()),
+                    SizedBox(
+                      height: 5,
                     ),
                   ],
                 ),
-                // Indicators
-                for (int i = 0; i < 5; i++)
-                  drawIndicators(
-                      i: i, nums: widget.nums, percentages: widget.percentages),
-                SizedBox(
-                  height: 5,
+              ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            Row(
+              children: [
+                Text(
+                  "$numOfReviews Reviews",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.surface,
+                    fontFamily: FontConstants.fontFamily,
+                  ),
+                ),
+                Spacer(),
+              ],
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            // The Review of The Product
+            if (feedbacks.isEmpty)
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  "No reviews yet. Be the first to review!",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.surface,
+                    fontFamily: FontConstants.fontFamily,
+                  ),
+                ),
+              )
+            else
+              ...feedbacks.map((feedback) => _buildReviewCard(feedback)),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildReviewCard(Feedback feedback) {
+    return FutureBuilder<String>(
+      future: _getUserName(feedback.UserID),
+      builder: (context, snapshot) {
+        final userName = snapshot.data ?? 'User';
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 4),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                      child: Icon(Icons.person,
+                          color: Theme.of(context).primaryColor),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            userName,
+                            style: TextStyle(
+                                fontSize: 13,
+                                fontFamily: FontConstants.fontFamily,
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeightManager.bold),
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              for (int i = 0; i < 5; i++)
+                                Icon(
+                                  i < feedback.rating
+                                      ? Icons.star
+                                      : Icons.star_border,
+                                  size: 15,
+                                  color: Theme.of(context).colorScheme.secondary,
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  feedback.review,
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontFamily: FontConstants.fontFamily,
+                      fontSize: 12),
                 ),
               ],
             ),
           ),
-        ),
-        SizedBox(
-          height: 5,
-        ),
-        Row(
-          children: [
-            Text(
-              "${widget.numOfReviews} Reviews",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.surface,
-                fontFamily: FontConstants.fontFamily,
-              ),
-            ),
-            Spacer(),
-            Text("WRITE A REVIEW",
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.surface,
-                  fontFamily: FontConstants.fontFamily,
-                )),
-            SizedBox(
-              width: 3,
-            ),
-            IconButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                      showDragHandle: true,
-                      backgroundColor: Theme.of(context).colorScheme.onPrimary,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Padding(
-                          padding: EdgeInsets.all(5),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  controller: addReview,
-                                  decoration: InputDecoration(
-                                      label: Text(
-                                        "Add Your Review",
-                                        style: TextStyle(
-                                            fontFamily:
-                                                FontConstants.fontFamily,
-                                            color:
-                                                Theme.of(context).primaryColor),
-                                      ),
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10))),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              ElevatedButton(
-                                  style: ButtonStyle(
-                                      backgroundColor: WidgetStateProperty.all(
-                                          Theme.of(context)
-                                              .colorScheme
-                                              .secondary)),
-                                  onPressed: () {},
-                                  child: Text(
-                                    "Add",
-                                    style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary,
-                                      fontFamily: FontConstants.fontFamily,
-                                    ),
-                                  ))
-                            ],
-                          ),
-                        );
-                      });
-                },
-                padding: EdgeInsets.all(0),
-                constraints: BoxConstraints(),
-                icon: Icon(
-                  Icons.edit_outlined,
-                  size: 25,
-                  color: Theme.of(context).colorScheme.surface,
-                ))
-          ],
-        ),
-        SizedBox(
-          height: 5,
-        ),
-        // The Review of The Product
-        for (int i = 0; i < 2; i++)
-          drawReview(image: [
-            'assets/images/welcomePic.png',
-            'assets/images/3rdOnboardingPic.jpg'
-          ], i: i),
-      ],
+        );
+      },
     );
+  }
+
+  Future<String> _getUserName(String userId) async {
+    try {
+      final firestore = FirebaseFirestore.instance;
+      final doc = await firestore.collection('users').doc(userId).get();
+      return doc.data()?['name'] as String? ?? 'User';
+    } catch (e) {
+      return 'User';
+    }
   }
 }
