@@ -71,7 +71,6 @@
   "noItemsInThisCartYet": "No items in this cart yet",
   "loading": "Loading...",
   "addedBy": "Added by:",
-  "proceedToCheckout": "Proceed to Checkout",
   "createSharedCart": "Create Shared Cart",
   "enterCartName": "Enter cart name",
   "cartName": "Cart Name",
@@ -89,9 +88,7 @@
   "yourCart": "Your Cart",
   "yourCartIsEmpty": "Your cart is empty",
   "proceedToCheckout": "Proceed to checkout",
-  "total": "Total:",
-  
-  "email": "Email",
+
   "password": "Password",
   "forgotPassword": "Forgot Password?",
   "login": "Login",

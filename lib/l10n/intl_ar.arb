@@ -18,7 +18,6 @@
   "orderNumber": "رقم الطلب",
   "deliveryAddress": "عنوان التوصيل",
   "shipping": "الشحن",
-  "total": "الإجمالي",
   "returnHome": "العودة للرئيسية",
   "rate": "تقييم",
   "continueShopping": "اكمل التسوق",
@@ -71,7 +70,6 @@
   "noItemsInThisCartYet": "لا توجد عناصر في هذه السلة بعد",
   "loading": "جاري التحميل...",
   "addedBy": "تمت الإضافة بواسطة:",
-  "proceedToCheckout": "المتابعة إلى الدفع",
   "createSharedCart": "إنشاء سلة مشتركة",
   "enterCartName": "أدخل اسم السلة",
   "cartName": "اسم السلة",
@@ -91,7 +89,6 @@
   "proceedToCheckout": "المتابعة إلى الدفع",
   "total": "الإجمالي:",
   
-  "email": "البريد الإلكتروني",
   "password": "كلمة المرور",
   "forgotPassword": "نسيت كلمة المرور؟",
   "login": "تسجيل الدخول",
