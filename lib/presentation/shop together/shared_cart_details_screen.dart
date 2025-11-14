@@ -33,12 +33,15 @@ class _SharedCartDetailsScreenState extends State<SharedCartDetailsScreen> {
   final _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
 
-  // Caches for metadata and product objects
+  // cached metadata & products
   final Map<String, String> _productNames = {};
   final Map<String, String> _userNames = {};
   final Map<String, Product> _products = {};
 
-  // Track whether metadata for current cart items is loaded
+  // local copy of items for this screen (populated from bloc's ItemsLoaded)
+  List<SharedCartItem>? _items;
+
+  // meta loading state for product/user names and product objects
   bool _metaLoading = false;
   String? _metaLoadedForCartId;
 
@@ -49,60 +52,14 @@ class _SharedCartDetailsScreenState extends State<SharedCartDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    // Trigger items load once when screen opens
+    // Request items once
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<SharedCartBloc>().add(LoadSharedCartItems(widget.cart.id));
     });
   }
 
-  Future<String> _getProductName(String productId) async {
-    if (_productNames.containsKey(productId)) return _productNames[productId]!;
-    try {
-      final doc = await _firestore.collection('products').doc(productId).get();
-      if (doc.exists) {
-        final data = doc.data()!;
-        final name = (data['ProductName'] as String?) ?? 'Unknown Product';
-        _productNames[productId] = name;
-        return name;
-      }
-      return 'Product Not Found';
-    } catch (_) {
-      return 'Error Loading Product';
-    }
-  }
-
-  Future<Product?> _getProduct(String productId) async {
-    if (_products.containsKey(productId)) return _products[productId];
-    try {
-      final doc = await _firestore.collection('products').doc(productId).get();
-      if (doc.exists) {
-        final product =
-        Product.fromJson({...doc.data()!, 'id': doc.id} as Map<String, dynamic>);
-        _products[productId] = product;
-        return product;
-      }
-      return null;
-    } catch (_) {
-      return null;
-    }
-  }
-
-  Future<String> _getUserName(String userId) async {
-    if (_userNames.containsKey(userId)) return _userNames[userId]!;
-    try {
-      final doc = await _firestore.collection('users').doc(userId).get();
-      final name = (doc.data()?['name'] as String?) ?? 'User';
-      _userNames[userId] = name;
-      return name;
-    } catch (_) {
-      return 'User';
-    }
-  }
-
-  /// Preload product names & user names (and product objects) for given items.
-  /// This runs when SharedCartItemsLoaded arrives and caches metadata so UI renders synchronously.
   Future<void> _preloadMetaForItems(String cartId, List<SharedCartItem> items) async {
-    // Skip if we've already loaded meta for this cart
+    // Skip if already loaded meta for this cart id
     if (_metaLoadedForCartId == cartId) return;
 
     _metaLoading = true;
@@ -111,24 +68,24 @@ class _SharedCartDetailsScreenState extends State<SharedCartDetailsScreen> {
     try {
       final productIds = <String>{};
       final userIds = <String>{};
-      for (var item in items) {
-        productIds.add(item.productId);
-        userIds.add(item.addedBy);
+      for (final it in items) {
+        productIds.add(it.productId);
+        userIds.add(it.addedBy);
       }
 
-      // fetch names in parallel
-      final productNameFutures = productIds.map((id) => _getProductName(id));
-      final userNameFutures = userIds.map((id) => _getUserName(id));
+      // fetch all product names & user names in parallel
+      final productNameFutures = productIds.map((id) => _fetchAndCacheProductName(id));
+      final userNameFutures = userIds.map((id) => _fetchAndCacheUserName(id));
       await Future.wait([
         Future.wait(productNameFutures),
         Future.wait(userNameFutures),
       ]);
 
-      // also preload full Product objects for checkout
-      final productObjFutures = productIds.map((id) => _getProduct(id));
+      // preload full Product objects (for checkout) in parallel
+      final productObjFutures = productIds.map((id) => _fetchAndCacheProductObj(id));
       await Future.wait(productObjFutures);
     } catch (_) {
-      // swallow; we'll display fallback strings
+      // ignore and fall back to placeholders
     } finally {
       _metaLoading = false;
       _metaLoadedForCartId = cartId;
@@ -136,22 +93,57 @@ class _SharedCartDetailsScreenState extends State<SharedCartDetailsScreen> {
     }
   }
 
-  void _deleteItem(SharedCartItem item) {
-    if (item.id == null) return;
+  Future<void> _fetchAndCacheProductName(String productId) async {
+    if (_productNames.containsKey(productId)) return;
+    try {
+      final doc = await _firestore.collection('products').doc(productId).get();
+      final name = (doc.data()?['ProductName'] as String?) ?? S.of(context).loading;
+      _productNames[productId] = name;
+    } catch (_) {
+      _productNames[productId] = S.of(context).loading;
+    }
+  }
 
+  Future<void> _fetchAndCacheUserName(String userId) async {
+    if (_userNames.containsKey(userId)) return;
+    try {
+      final doc = await _firestore.collection('users').doc(userId).get();
+      final name = (doc.data()?['name'] as String?) ?? S.of(context).user;
+      _userNames[userId] = name;
+    } catch (_) {
+      _userNames[userId] = S.of(context).user;
+    }
+  }
+
+  Future<void> _fetchAndCacheProductObj(String productId) async {
+    if (_products.containsKey(productId)) return;
+    try {
+      final doc = await _firestore.collection('products').doc(productId).get();
+      if (doc.exists) {
+        final json = {...doc.data()!, 'id': doc.id} as Map<String, dynamic>;
+        final product = Product.fromJson(json);
+        _products[productId] = product;
+      }
+    } catch (_) {
+      // ignore
+    }
+  }
+
+  void _onRemoveItem(SharedCartItem item) {
+    if (item.id == null) return;
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (ctx) => AlertDialog(
         title: Text(S.of(context).deleteItem),
         content: Text(S.of(context).areYouSureYouWantToRemoveItem),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: Text(S.of(context).cancel)),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(S.of(context).cancel)),
           TextButton(
             onPressed: () {
               context.read<SharedCartBloc>().add(
                 RemoveItemFromSharedCart(cartId: widget.cart.id, itemId: item.id!),
               );
-              Navigator.pop(context);
+              Navigator.pop(ctx);
             },
             child: Text(S.of(context).delete, style: const TextStyle(color: Colors.red)),
           ),
@@ -160,10 +152,12 @@ class _SharedCartDetailsScreenState extends State<SharedCartDetailsScreen> {
     );
   }
 
-  Future<void> _proceedToCheckout(List<SharedCartItem> items) async {
+  Future<void> _proceedToCheckout() async {
+    final items = _items ?? [];
     final List<CartItem> cartItems = [];
+
     for (final sharedItem in items) {
-      final product = await _getProduct(sharedItem.productId);
+      final product = _products[sharedItem.productId] ?? await _fetchProductOnTheFly(sharedItem.productId);
       if (product != null) {
         cartItems.add(CartItem(
           product: product,
@@ -176,37 +170,42 @@ class _SharedCartDetailsScreenState extends State<SharedCartDetailsScreen> {
 
     if (cartItems.isEmpty) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(S.of(context).noValidProductsToCheckout)),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).noValidProductsToCheckout)));
       }
       return;
     }
 
     if (!mounted) return;
+    Navigator.pushNamed(context, Routes.checkoutRoute, arguments: {
+      'cartItems': cartItems,
+      'sharedCartId': widget.cart.id,
+    });
+  }
 
-    Navigator.pushNamed(
-      context,
-      Routes.checkoutRoute,
-      arguments: {
-        'cartItems': cartItems,
-        'sharedCartId': widget.cart.id,
-      },
-    );
+  Future<Product?> _fetchProductOnTheFly(String id) async {
+    try {
+      final doc = await _firestore.collection('products').doc(id).get();
+      if (doc.exists) {
+        final product = Product.fromJson({...doc.data()!, 'id': doc.id} as Map<String, dynamic>);
+        _products[id] = product;
+        return product;
+      }
+    } catch (_) {}
+    return null;
   }
 
   void _handleDeleteCart() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (ctx) => AlertDialog(
         title: Text(S.of(context).deleteCart),
         content: Text(S.of(context).areYouSureYouWantToDeleteCart),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: Text(S.of(context).cancel)),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(S.of(context).cancel)),
           TextButton(
             onPressed: () {
               context.read<SharedCartBloc>().add(DeleteSharedCart(widget.cart.id));
-              Navigator.pop(context);
+              Navigator.pop(ctx);
             },
             child: Text(S.of(context).delete, style: const TextStyle(color: Colors.red)),
           ),
@@ -218,22 +217,19 @@ class _SharedCartDetailsScreenState extends State<SharedCartDetailsScreen> {
   void _handleLeaveCart() {
     final userId = _auth.currentUser?.uid;
     if (userId == null) return;
-
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (ctx) => AlertDialog(
         title: Text(S.of(context).leaveCart),
         content: Text(S.of(context).areYouSureYouWantToLeaveCart),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: Text(S.of(context).cancel)),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text(S.of(context).cancel)),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(ctx);
               context.read<SharedCartBloc>().add(RemoveCollaborator(cartId: widget.cart.id, userId: userId));
               if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(S.of(context).cartLeft)),
-                );
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).cartLeft)));
                 Navigator.pop(context);
               }
             },
@@ -244,96 +240,11 @@ class _SharedCartDetailsScreenState extends State<SharedCartDetailsScreen> {
     );
   }
 
-  Widget _buildItemsList(List<SharedCartItem> items) {
-    return Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            padding: EdgeInsets.all(16.w),
-            itemCount: items.length,
-            itemBuilder: (context, index) {
-              final item = items[index];
+  // Helper: synchronous getters for UI (use cache or fallbacks)
+  String _productNameOrFallback(String productId) =>
+      _productNames[productId] ?? S.of(context).loading;
 
-              // Use cached metadata (synchronous)
-              final productName = _productNames[item.productId] ?? S.of(context).loading;
-              final userName = _userNames[item.addedBy] ?? S.of(context).user;
-
-              return Card(
-                margin: EdgeInsets.only(bottom: 12.h),
-                child: ListTile(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                  title: Text(
-                    productName,
-                    style: TextStyle(
-                      fontFamily: FontConstants.fontFamily,
-                      fontWeight: FontWeightManager.bold,
-                      fontSize: 16.sp,
-                    ),
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 4),
-                      Text(
-                        '${S.of(context).addedBy} $userName',
-                        style: TextStyle(
-                          fontFamily: FontConstants.fontFamily,
-                          fontSize: 12.sp,
-                          color: ColorManager.lightGrayLight,
-                        ),
-                      ),
-                      Text(
-                        '${S.of(context).quantity}: ${item.quantity}',
-                        style: TextStyle(
-                          fontFamily: FontConstants.fontFamily,
-                          fontSize: 12.sp,
-                          color: ColorManager.lightGrayLight,
-                        ),
-                      ),
-                    ],
-                  ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete_outline, color: Colors.red),
-                    onPressed: () => _deleteItem(item),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        // Checkout button
-        Container(
-          padding: EdgeInsets.all(16.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, -2)),
-            ],
-          ),
-          child: SizedBox(
-            width: double.infinity,
-            height: 50.h,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ColorManager.primaryLight,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-              onPressed: () => _proceedToCheckout(items),
-              child: Text(
-                S.of(context).proceedToCheckout,
-                style: TextStyle(
-                  fontFamily: FontConstants.fontFamily,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeightManager.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  String _userNameOrFallback(String userId) => _userNames[userId] ?? S.of(context).user;
 
   @override
   Widget build(BuildContext context) {
@@ -349,7 +260,10 @@ class _SharedCartDetailsScreenState extends State<SharedCartDetailsScreen> {
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
-        leading: IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.black87)),
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.black87),
+        ),
         actions: [
           if (_isOwner)
             IconButton(icon: const Icon(Icons.delete_outline, color: Colors.red), onPressed: _handleDeleteCart, tooltip: S.of(context).deleteCart)
@@ -357,61 +271,140 @@ class _SharedCartDetailsScreenState extends State<SharedCartDetailsScreen> {
             IconButton(icon: const Icon(Icons.exit_to_app, color: Colors.red), onPressed: _handleLeaveCart, tooltip: S.of(context).leaveCart),
         ],
       ),
-      body: BlocConsumer<SharedCartBloc, SharedCartState>(
-        listener: (context, state) {
+      body: BlocListener<SharedCartBloc, SharedCartState>(
+        listener: (context, state) async {
+          // Only respond to SharedCartItemsLoaded for this cart id:
           if (state is SharedCartItemsLoaded && state.cartId == widget.cart.id) {
-            // Preload metadata once for items when they're loaded
-            _preloadMetaForItems(state.cartId, state.items);
-          } else if (state is SharedCartDeleted) {
+            _items = state.items;
+            // preload metadata (names + product objects)
+            await _preloadMetaForItems(state.cartId, state.items);
+            if (mounted) setState(() {});
+            return;
+          }
+
+          // If an update happened, request fresh items (one-time)
+          if (state is SharedCartUpdated) {
+            // re-request items after an update
+            context.read<SharedCartBloc>().add(LoadSharedCartItems(widget.cart.id));
+            return;
+          }
+
+          if (state is SharedCartDeleted) {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(S.of(context).cartDeleted)));
               Navigator.pop(context);
             }
-          } else if (state is SharedCartError) {
+            return;
+          }
+
+          if (state is SharedCartError) {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
             }
+            return;
           }
+
+          // IMPORTANT: ignore other states (e.g., SharedCartsLoaded) — they are unrelated
         },
-        builder: (context, state) {
-          // If bloc says loading globally (e.g., create/delete operations) show spinner
-          if (state is SharedCartLoading) {
+        child: Builder(builder: (context) {
+          // Show loading when we have not yet received items OR when metadata is still loading
+          if (_items == null) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          // When items loaded for this cart:
-          if (state is SharedCartItemsLoaded && state.cartId == widget.cart.id) {
-            final items = state.items;
-
-            // If no items show placeholder
-            if (items.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.shopping_cart_outlined, size: 64, color: ColorManager.lightGrayLight),
-                    const SizedBox(height: 16),
-                    Text(
-                      S.of(context).noItemsInThisCartYet,
-                      style: TextStyle(color: ColorManager.lightGrayLight, fontSize: 16),
-                    ),
-                  ],
-                ),
-              );
-            }
-
-            // If metadata still loading, show spinner until cached names available
-            if (_metaLoading || _metaLoadedForCartId != widget.cart.id) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            // Meta loaded -> render list
-            return _buildItemsList(items);
+          // If items are empty, show placeholder
+          if (_items!.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.shopping_cart_outlined, size: 64, color: ColorManager.lightGrayLight),
+                  const SizedBox(height: 16),
+                  Text(S.of(context).noItemsInThisCartYet, style: TextStyle(color: ColorManager.lightGrayLight, fontSize: 16)),
+                ],
+              ),
+            );
           }
 
-          // Default: show spinner while waiting for initial items load
-          return const Center(child: CircularProgressIndicator());
-        },
+          // If metadata for items is still loading, show spinner
+          if (_metaLoading || _metaLoadedForCartId != widget.cart.id) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          // All good: render the list synchronously using cached metadata
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  padding: EdgeInsets.all(16.w),
+                  itemCount: _items!.length,
+                  itemBuilder: (context, index) {
+                    final item = _items![index];
+                    final productName = _productNameOrFallback(item.productId);
+                    final userName = _userNameOrFallback(item.addedBy);
+
+                    return Card(
+                      margin: EdgeInsets.only(bottom: 12.h),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                        title: Text(
+                          productName,
+                          style: TextStyle(
+                            fontFamily: FontConstants.fontFamily,
+                            fontWeight: FontWeightManager.bold,
+                            fontSize: 16.sp,
+                          ),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 4),
+                            Text('${S.of(context).addedBy} $userName',
+                                style: TextStyle(
+                                  fontFamily: FontConstants.fontFamily,
+                                  fontSize: 12.sp,
+                                  color: ColorManager.lightGrayLight,
+                                )),
+                            Text('${S.of(context).quantity}: ${item.quantity}',
+                                style: TextStyle(
+                                  fontFamily: FontConstants.fontFamily,
+                                  fontSize: 12.sp,
+                                  color: ColorManager.lightGrayLight,
+                                )),
+                          ],
+                        ),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete_outline, color: Colors.red),
+                          onPressed: () => _onRemoveItem(item),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              // Checkout button
+              Container(
+                padding: EdgeInsets.all(16.w),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, -2))],
+                ),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 50.h,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: ColorManager.primaryLight,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    onPressed: _proceedToCheckout,
+                    child: Text(S.of(context).proceedToCheckout, style: TextStyle(fontFamily: FontConstants.fontFamily, fontSize: 16.sp, fontWeight: FontWeightManager.bold, color: Colors.white)),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
