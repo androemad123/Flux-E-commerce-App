@@ -249,9 +249,9 @@ class S {
     );
   }
 
-  /// `GemStore`
+  /// `fluxStore`
   String get appName {
-    return Intl.message('GemStore', name: 'appName', desc: '', args: []);
+    return Intl.message('fluxStore', name: 'appName', desc: '', args: []);
   }
 
   /// `Name of user`

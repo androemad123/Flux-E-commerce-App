@@ -36,7 +36,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "addedTo": MessageLookupByLibrary.simpleMessage("added to"),
     "address": MessageLookupByLibrary.simpleMessage("Address"),
     "ago": MessageLookupByLibrary.simpleMessage("ago"),
-    "appName": MessageLookupByLibrary.simpleMessage("GemStore"),
+    "appName": MessageLookupByLibrary.simpleMessage("fluxStore"),
     "arabic": MessageLookupByLibrary.simpleMessage("Arabic"),
     "areYouSureYouWantToDeleteCart": MessageLookupByLibrary.simpleMessage(
       "Are you sure you want to delete this cart? This action cannot be undone.",

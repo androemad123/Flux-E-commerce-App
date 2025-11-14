@@ -36,7 +36,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "addedTo": MessageLookupByLibrary.simpleMessage("تمت إضافته إلى"),
     "address": MessageLookupByLibrary.simpleMessage("العنوان"),
     "ago": MessageLookupByLibrary.simpleMessage("منذ"),
-    "appName": MessageLookupByLibrary.simpleMessage("متجر الجواهر"),
+    "appName": MessageLookupByLibrary.simpleMessage("متجر فلاكس"),
     "arabic": MessageLookupByLibrary.simpleMessage("العربية"),
     "areYouSureYouWantToDeleteCart": MessageLookupByLibrary.simpleMessage(
       "هل أنت متأكد من حذف هذه السلة؟ لا يمكن التراجع عن هذا الإجراء.",
